@@ -6,148 +6,196 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar Indikator Kesprimkom</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --dark-teal: #005050;
+            --teal-green: #007E78;
+            --medium-teal: #008E87;
+            --bright-teal: #00B3AC;
+            --light-mint: #C7EDEB;
+            --olive-green: #646400;
+            --lime-yellow: #D2DE00;
+            --pale-yellow: #F4F7C2;
+            --light-gray: #BFBFBF;
+            --medium-gray: #7F7F7F;
+            --bright-red: #C00000;
+        }
+
+        body {
+            background: linear-gradient(80deg, #00151d 0%, #007E78 50%, #008E87 100%);
+            min-height: 100vh;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-gradient {
+            background: linear-gradient(90deg, #005858 0%, #00B3AC 100%);
+        }
+
+        .badge-ikp {
+            background-color: #C7EDEB;
+            color: #005050;
+        }
+
+        .badge-ikk {
+            background-color: #F4F7C2;
+            color: #646400;
+        }
+    </style>
 </head>
 
-<body class="bg-gray-50">
-    <div class="container mx-auto px-4 py-8">
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <div class="flex justify-between items-center mb-6">
-                <h1 class="text-3xl font-bold text-gray-800">Daftar Indikator Kesprimkom</h1>
-                <a href="{{ route('usulan.index') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition">
-                    ← Kembali ke Survey
-                </a>
+<body>
+    <div class="container mx-auto px-4 py-6 md:py-8 max-w-7xl">
+        <div class="glass-effect rounded-3xl shadow-2xl overflow-hidden mb-6">
+            <!-- Header -->
+            <div class="header-gradient p-4 md:py-4 px-4 ps-6">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-0">
+                    <h2 class="text-xl md:text-2xl font-bold text-white">Daftar Indikator Kesprimkom</h2>
+                    <a href="{{ route('usulan.index') }}"
+                        class="flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 backdrop-blur text-white px-4 md:px-6 py-2 rounded-xl transition text-sm md:text-base border border-white border-opacity-30">
+                        <span class="mr-2">←</span>
+                        <span>Kembali ke Survey</span>
+                    </a>
+                </div>
             </div>
 
-            <!-- Responden Identity -->
-            @if (session('responden_id'))
-                @php
-                    $responden = \App\Models\Responden::find(session('responden_id'));
-                @endphp
-                @if ($responden)
-                    <div class="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-4 mb-4">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <div class="text-xs text-green-600 font-medium mb-1">Responden Aktif</div>
-                                <div class="flex items-center gap-4 text-sm">
-                                    <div>
-                                        <span class="font-semibold text-gray-800">{{ $responden->nama }}</span>
-                                        <span class="text-gray-500">·</span>
-                                        <span class="text-gray-600">{{ $responden->jabatan }}</span>
-                                        <span class="text-gray-500">·</span>
-                                        <span class="text-gray-600">{{ $responden->instansi }}</span>
-                                    </div>
-                                </div>
-                            </div> 
+            <div class="p-4 md:p-6">
+                <!-- Responden Identity -->
+                @if (session('responden_id'))
+                    @php
+                        $responden = \App\Models\Responden::find(session('responden_id'));
+                    @endphp
+                    @if ($responden)
+                        <div class="bg-gradient-to-r from-[#edfffe] to-[#edfffe] border-2 border-[#00B3AC] rounded-xl p-4 mb-4">
+                            <div class="text-xs font-medium mb-2" style="color: #007E78">✓ Responden Aktif</div>
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-2 text-sm">
+                                <div class="font-semibold" style="color: #005050">{{ $responden->nama }}</div>
+                                <div class="hidden sm:block" style="color: #7F7F7F">·</div>
+                                <div style="color: #007E78">{{ $responden->jabatan }}</div>
+                                <div class="hidden sm:block" style="color: #7F7F7F">·</div>
+                                <div style="color: #007E78">{{ $responden->instansi }}</div>
+                            </div>
+                        </div>
+                    @endif
+                @endif
+
+                <!-- Search & Filter Section -->
+                <div class="bg-gradient-to-r from-[#edfffe] to-[#edfffe] rounded-xl p-3 mb-4 border-2 border-[#00B3AC]">
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-end">
+                        <div class="md:col-span-5 mb-1">
+                            <label class="block text-xs font-medium mb-1" style="color: #005050">🔍 Cari (Nomor, Nama, Tingkat, Unit)</label>
+                            <input id="searchInput" type="text" placeholder="Ketik untuk mencari..."
+                                class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #BFBFBF">
+                        </div>
+                        <div class="md:col-span-3 mb-1">
+                            <label class="block text-xs font-medium mb-1" style="color: #005050">Filter Tingkat</label>
+                            <select id="tingkatFilter" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
+                                style="border-color: #BFBFBF">
+                                <option value="">Semua Tingkat</option>
+                                <option value="IKK">IKK</option>
+                                <option value="IKP">IKP</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-2 mb-1">
+                            <label class="block text-xs font-medium mb-1" style="color: #005050">Filter Unit/Tim Kerja</label>
+                            <select id="unitFilter" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
+                                style="border-color: #BFBFBF">
+                                <option value="">Semua Unit</option>
+                                @foreach ($indikators->pluck('unit_timker')->unique()->filter()->sort() as $unit)
+                                    <option value="{{ $unit }}">{{ $unit }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="md:col-span-2 p-1">
+                            <button id="resetBtn"
+                                class="bg-gradient-to-r from-[#007E78] to-[#00B3AC] hover:from-[#005050] hover:to-[#007E78] text-white px-2 py-1 rounded-xl transition w-full h-12 font-semibold">
+                                Reset
+                            </button>
                         </div>
                     </div>
-                @endif
-            @endif
+                </div>
 
-            <!-- Search & Filter Section -->
-            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-3 mb-4 border border-blue-200">
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-end">
-                    <div class="md:col-span-5 mb-1">
-                        <label class="block text-xs font-medium text-gray-700 mb-1">🔍 Cari (Nomor, Nama, Tingkat, Unit)</label>
-                        <input id="searchInput" type="text" placeholder="Ketik untuk mencari..."
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <!-- Statistics -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                    <div class="rounded-xl p-3" style="background-color: #C7EDEB">
+                        <div class="text-xs font-medium" style="color: #007E78">Total Indikator</div>
+                        <div class="text-2xl font-bold" style="color: #005050" id="totalCount">{{ $indikators->count() }}</div>
                     </div>
-                    <div class="md:col-span-3 mb-1">
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Filter Tingkat</label>
-                        <select id="tingkatFilter"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="">Semua Tingkat</option>
-                            <option value="IKK">IKK</option>
-                            <option value="IKP">IKP</option>
-                        </select>
+                    <div class="rounded-xl p-3" style="background-color: #C7EDEB">
+                        <div class="text-xs font-medium" style="color: #007E78">IKP</div>
+                        <div class="text-2xl font-bold" style="color: #005050" id="ikpCount">{{ $indikators->where('tingkat', 'IKP')->count() }}
+                        </div>
                     </div>
-                    <div class="md:col-span-2 mb-1">
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Filter Unit/Tim Kerja</label>
-                        <select id="unitFilter"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="">Semua Unit</option>
-                            @foreach ($indikators->pluck('unit_timker')->unique()->filter()->sort() as $unit)
-                                <option value="{{ $unit }}">{{ $unit }}</option>
-                            @endforeach
-                        </select>
+                    <div class="rounded-xl p-3" style="background-color: #F4F7C2">
+                        <div class="text-xs font-medium" style="color: #646400">IKK</div>
+                        <div class="text-2xl font-bold" style="color: #646400" id="ikkCount">{{ $indikators->where('tingkat', 'IKK')->count() }}
+                        </div>
                     </div>
-                    <div class="md:col-span-2 p-1"> 
-                        <button id="resetBtn"
-                            class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded-lg transition w-full h-12">Reset</button>
-                    </div> 
+                    <div class="rounded-xl p-3 border-2" style="border-color: #00B3AC; background-color: white">
+                        <div class="text-xs font-medium" style="color: #007E78">Ditampilkan</div>
+                        <div class="text-2xl font-bold" style="color: #005050" id="visibleCount">{{ $indikators->count() }}</div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Statistics -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-                <div class="bg-blue-100 rounded-lg p-3">
-                    <div class="text-xs text-blue-600 font-medium">Total Indikator</div>
-                    <div class="text-2xl font-bold text-blue-800" id="totalCount">{{ $indikators->count() }}</div>
-                </div>
-                <div class="bg-green-100 rounded-lg p-3">
-                    <div class="text-xs text-green-600 font-medium">IKP</div>
-                    <div class="text-2xl font-bold text-green-800" id="ikpCount">{{ $indikators->where('tingkat', 'IKP')->count() }}</div>
-                </div>
-                <div class="bg-orange-100 rounded-lg p-3">
-                    <div class="text-xs text-orange-600 font-medium">IKK</div>
-                    <div class="text-2xl font-bold text-orange-800" id="ikkCount">{{ $indikators->where('tingkat', 'IKK')->count() }}</div>
-                </div>
-                <div class="bg-purple-100 rounded-lg p-3">
-                    <div class="text-xs text-purple-600 font-medium">Ditampilkan</div>
-                    <div class="text-2xl font-bold text-purple-800" id="visibleCount">{{ $indikators->count() }}</div>
-                </div>
-            </div>
-
-            <!-- Table -->
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm" id="indikatorTable">
-                    <thead class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-                        <tr>
-                            <th class="px-3 py-3 text-left">No</th>
-                            <th class="px-3 py-3 text-left">Nomor</th>
-                            <th class="px-3 py-3 text-left">Tingkat</th>
-                            <th class="px-3 py-3 text-left">Nama Indikator</th>
-                            <th class="px-3 py-3 text-left">Unit/Tim Kerja</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        @foreach ($indikators as $index => $indikator)
-                            <tr class="border-b hover:bg-blue-50 transition indikator-row" data-nomor="{{ strtolower($indikator->nomor) }}"
-                                data-nama="{{ strtolower($indikator->nama) }}" data-tingkat="{{ $indikator->tingkat }}"
-                                data-unit="{{ strtolower($indikator->unit_timker ?? '') }}">
-                                <td class="px-3 py-2 text-gray-600 row-number">{{ $index + 1 }}</td>
-                                <td class="px-3 py-2">
-                                    <span class="font-mono font-semibold text-blue-600">{{ $indikator->nomor }}</span>
-                                </td>
-                                <td class="px-3 py-2">
-                                    <span
-                                        class="inline-block px-3 py-1 text-xs font-semibold rounded-full {{ $indikator->tingkat == 'IKP' ? 'bg-green-100 text-green-800' : 'bg-purple-100 text-purple-800' }}">
-                                        {{ $indikator->tingkat }}
-                                    </span>
-                                </td>
-                                <td class="px-3 py-2">
-                                    <div class="font-medium text-gray-800">{{ $indikator->nama }}</div>
-                                </td>
-                                <td class="px-3 py-2">
-                                    <span class="text-gray-700">{{ $indikator->unit_timker ?: '-' }}</span>
-                                </td>
+                <!-- Table -->
+                <div class="overflow-x-auto rounded-xl border-2" style="border-color: #BFBFBF">
+                    <table class="w-full text-sm" id="indikatorTable">
+                        <thead style="background-color: #C7EDEB">
+                            <tr>
+                                <th class="px-3 py-3 text-left font-semibold" style="color: #005050">No</th>
+                                <th class="px-3 py-3 text-left font-semibold" style="color: #005050">Nomor</th>
+                                <th class="px-3 py-3 text-left font-semibold" style="color: #005050">Tingkat</th>
+                                <th class="px-3 py-3 text-left font-semibold" style="color: #005050">Nama Indikator</th>
+                                <th class="px-3 py-3 text-left font-semibold" style="color: #005050">Unit/Tim Kerja</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody id="tableBody" class="bg-white">
+                            @foreach ($indikators as $index => $indikator)
+                                <tr class="border-b hover:bg-gray-50 transition indikator-row" data-nomor="{{ strtolower($indikator->nomor) }}"
+                                    data-nama="{{ strtolower($indikator->nama) }}" data-tingkat="{{ $indikator->tingkat }}"
+                                    data-unit="{{ strtolower($indikator->unit_timker ?? '') }}" style="border-color: #BFBFBF">
+                                    <td class="px-3 py-2 row-number" style="color: #7F7F7F">{{ $index + 1 }}</td>
+                                    <td class="px-3 py-2">
+                                        <span class="font-mono font-semibold" style="color: #007E78">{{ $indikator->nomor }}</span>
+                                    </td>
+                                    <td class="px-3 py-2">
+                                        <span
+                                            class="inline-block px-3 py-1 text-xs font-semibold rounded-full {{ $indikator->tingkat == 'IKP' ? 'badge-ikp' : 'badge-ikk' }}">
+                                            {{ $indikator->tingkat }}
+                                        </span>
+                                    </td>
+                                    <td class="px-3 py-2">
+                                        <div class="font-medium" style="color: #005050">{{ $indikator->nama }}</div>
+                                    </td>
+                                    <td class="px-3 py-2">
+                                        <span style="color: #007E78">{{ $indikator->unit_timker ?: '-' }}</span>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
 
-            <!-- Active Filters & No Results -->
-            <div id="activeFilters" class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mt-3 hidden">
-                <div class="text-xs text-yellow-700"><span class="font-medium">Filter aktif:</span> <span id="filterTags"></span></div>
-            </div>
-            <div id="noResults" class="hidden py-6 text-center text-gray-500 text-sm">Tidak ada indikator ditemukan</div>
+                <!-- Active Filters & No Results -->
+                <div id="activeFilters" class="border-l-4 p-3 mt-3 rounded-lg hidden" style="background-color: #F4F7C2; border-color: #D2DE00">
+                    <div class="text-xs" style="color: #646400">
+                        <span class="font-medium">Filter aktif:</span> <span id="filterTags"></span>
+                    </div>
+                </div>
+                <div id="noResults" class="hidden py-6 text-center text-sm" style="color: #7F7F7F">
+                    Tidak ada indikator ditemukan
+                </div>
 
-            <!-- Legend -->
-            <div class="mt-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                <h3 class="font-semibold text-gray-700 mb-2">Keterangan:</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-1 text-sm text-gray-600">
-                    <div>• <span class="font-medium">IKP</span> = Indikator Kinerja Program</div>
-                    <div>• <span class="font-medium">IKK</span> = Indikator Kinerja Kegiatan</div>
+                <!-- Legend -->
+                <div class="mt-4 p-3 rounded-xl border-2" style="background-color: #edfffe; border-color: #00B3AC">
+                    <h3 class="font-semibold mb-2" style="color: #005050">Keterangan:</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-1 text-sm" style="color: #007E78">
+                        <div>• <span class="font-medium">IKP</span> = Indikator Kinerja Program</div>
+                        <div>• <span class="font-medium">IKK</span> = Indikator Kinerja Kegiatan</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -202,10 +250,14 @@
             tableBody.style.display = visibleCount ? '' : 'none';
             noResults.style.display = visibleCount ? 'none' : 'block';
 
-            if (searchTerm) tags.push(`<span class="inline-block bg-yellow-200 px-2 py-1 rounded mr-1">Pencarian: "${searchTerm}"</span>`);
-            if (tingkat) tags.push(`<span class="inline-block bg-yellow-200 px-2 py-1 rounded mr-1">Tingkat: ${tingkat}</span>`);
+            if (searchTerm) tags.push(
+                `<span class="inline-block px-2 py-1 rounded mr-1" style="background-color: #F4F7C2; color: #646400">Pencarian: "${searchTerm}"</span>`
+                );
+            if (tingkat) tags.push(
+                `<span class="inline-block px-2 py-1 rounded mr-1" style="background-color: #F4F7C2; color: #646400">Tingkat: ${tingkat}</span>`);
             if (unit) tags.push(
-                `<span class="inline-block bg-yellow-200 px-2 py-1 rounded mr-1">Unit: ${unitFilter.options[unitFilter.selectedIndex].text}</span>`);
+                `<span class="inline-block px-2 py-1 rounded mr-1" style="background-color: #F4F7C2; color: #646400">Unit: ${unitFilter.options[unitFilter.selectedIndex].text}</span>`
+                );
 
             if (tags.length) {
                 activeFiltersDiv.classList.remove('hidden');
