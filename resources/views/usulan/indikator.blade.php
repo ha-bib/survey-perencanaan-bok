@@ -69,7 +69,7 @@
                         $responden = \App\Models\Responden::find(session('responden_id'));
                     @endphp
                     @if ($responden)
-                        <div class="bg-gradient-to-r from-[#edfffe] to-[#edfffe] border-2 border-[#00B3AC] rounded-xl p-4 mb-4">
+                        <div class="bg-gradient-to-r from-[#edfffe] to-[#edfffe] border-1 border-[#00B3AC] rounded-xl p-4 mb-4">
                             <div class="text-xs font-medium mb-2" style="color: #007E78">✓ Responden Aktif</div>
                             <div class="flex flex-col sm:flex-row sm:items-center gap-2 text-sm">
                                 <div class="font-semibold" style="color: #005050">{{ $responden->nama }}</div>
@@ -83,16 +83,16 @@
                 @endif
 
                 <!-- Search & Filter Section -->
-                <div class="bg-gradient-to-r from-[#edfffe] to-[#edfffe] rounded-xl p-3 mb-4 border-2 border-[#00B3AC]">
+                <div class="bg-gradient-to-r from-[#edfffe] to-[#edfffe] rounded-xl p-3 mb-4 border-1 border-[#00B3AC]">
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-end">
                         <div class="md:col-span-5 mb-1">
                             <label class="block text-xs font-medium mb-1" style="color: #005050">🔍 Cari (Nomor, Nama, Tingkat, Unit)</label>
                             <input id="searchInput" type="text" placeholder="Ketik untuk mencari..."
-                                class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #BFBFBF">
+                                class="w-full px-3 py-2 border-1 rounded-xl focus:outline-none text-sm" style="border-color: #BFBFBF">
                         </div>
                         <div class="md:col-span-3 mb-1">
                             <label class="block text-xs font-medium mb-1" style="color: #005050">Filter Tingkat</label>
-                            <select id="tingkatFilter" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
+                            <select id="tingkatFilter" class="w-full px-3 py-2 border-1 rounded-xl focus:outline-none text-sm"
                                 style="border-color: #BFBFBF">
                                 <option value="">Semua Tingkat</option>
                                 <option value="IKK">IKK</option>
@@ -101,7 +101,7 @@
                         </div>
                         <div class="md:col-span-2 mb-1">
                             <label class="block text-xs font-medium mb-1" style="color: #005050">Filter Unit/Tim Kerja</label>
-                            <select id="unitFilter" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
+                            <select id="unitFilter" class="w-full px-3 py-2 border-1 rounded-xl focus:outline-none text-sm"
                                 style="border-color: #BFBFBF">
                                 <option value="">Semua Unit</option>
                                 @foreach ($indikators->pluck('unit_timker')->unique()->filter()->sort() as $unit)
@@ -134,14 +134,14 @@
                         <div class="text-2xl font-bold" style="color: #646400" id="ikkCount">{{ $indikators->where('tingkat', 'IKK')->count() }}
                         </div>
                     </div>
-                    <div class="rounded-xl p-3 border-2" style="border-color: #00B3AC; background-color: white">
+                    <div class="rounded-xl p-3 border-1" style="border-color: #00B3AC; background-color: white">
                         <div class="text-xs font-medium" style="color: #007E78">Ditampilkan</div>
                         <div class="text-2xl font-bold" style="color: #005050" id="visibleCount">{{ $indikators->count() }}</div>
                     </div>
                 </div>
 
                 <!-- Table -->
-                <div class="overflow-x-auto rounded-xl border-2" style="border-color: #BFBFBF">
+                <div class="overflow-x-auto rounded-xl border-1" style="border-color: #BFBFBF">
                     <table class="w-full text-sm" id="indikatorTable">
                         <thead style="background-color: #C7EDEB">
                             <tr>
@@ -190,7 +190,7 @@
                 </div>
 
                 <!-- Legend -->
-                <div class="mt-4 p-3 rounded-xl border-2" style="background-color: #edfffe; border-color: #00B3AC">
+                <div class="mt-4 p-3 rounded-xl border-1" style="background-color: #edfffe; border-color: #00B3AC">
                     <h3 class="font-semibold mb-2" style="color: #005050">Keterangan:</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-1 text-sm" style="color: #007E78">
                         <div>• <span class="font-medium">IKP</span> = Indikator Kinerja Program</div>

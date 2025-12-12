@@ -79,11 +79,11 @@
 
             <div class="p-4 md:p-6">
                 <!-- Filter -->
-                <div class="bg-gradient-to-r from-[#edfffe] to-[#edfffe] rounded-xl p-4 mb-6 border-2" style="border-color: #00B3AC">
+                <div class="bg-gradient-to-r from-[#edfffe] to-[#edfffe] rounded-xl p-4 mb-6 border-1" style="border-color: #00B3AC">
                     <form method="GET" action="{{ route('usulan.rekap') }}" class="grid grid-cols-1 md:grid-cols-5 gap-4">
                         <div>
                             <label class="block text-sm font-medium mb-2" style="color: #005050">Tingkat</label>
-                            <select name="tingkat" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #BFBFBF">
+                            <select name="tingkat" class="w-full px-3 py-2 border-1 rounded-xl focus:outline-none text-sm" style="border-color: #BFBFBF">
                                 <option value="">Semua Tingkat</option>
                                 <option value="Provinsi" {{ request('tingkat') == 'Provinsi' ? 'selected' : '' }}>Provinsi</option>
                                 <option value="Kabupaten/Kota" {{ request('tingkat') == 'Kabupaten/Kota' ? 'selected' : '' }}>Kabupaten/Kota</option>
@@ -93,7 +93,7 @@
 
                         <div>
                             <label class="block text-sm font-medium mb-2" style="color: #005050">Indikator</label>
-                            <select name="id_indikator" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #BFBFBF">
+                            <select name="id_indikator" class="w-full px-3 py-2 border-1 rounded-xl focus:outline-none text-sm" style="border-color: #BFBFBF">
                                 <option value="">Semua Indikator</option>
                                 @foreach($indikators as $ind)
                                     <option value="{{ $ind->id }}" {{ request('id_indikator') == $ind->id ? 'selected' : '' }}>
@@ -105,12 +105,12 @@
 
                         <div>
                             <label class="block text-sm font-medium mb-2" style="color: #005050">Nama Responden</label>
-                            <input type="text" name="nama_responden" value="{{ request('nama_responden') }}" placeholder="Cari nama..." class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #BFBFBF">
+                            <input type="text" name="nama_responden" value="{{ request('nama_responden') }}" placeholder="Cari nama..." class="w-full px-3 py-2 border-1 rounded-xl focus:outline-none text-sm" style="border-color: #BFBFBF">
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-2" style="color: #005050">Instansi</label>
-                            <input type="text" name="instansi" value="{{ request('instansi') }}" placeholder="Cari instansi..." class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #BFBFBF">
+                            <input type="text" name="instansi" value="{{ request('instansi') }}" placeholder="Cari instansi..." class="w-full px-3 py-2 border-1 rounded-xl focus:outline-none text-sm" style="border-color: #BFBFBF">
                         </div>
 
                         <div class="flex items-end gap-2">
@@ -134,14 +134,14 @@
                         <div class="text-sm font-medium" style="color: #646400">Total Anggaran</div>
                         <div class="text-2xl font-bold" style="color: #646400">Rp {{ number_format($usulanList->sum('anggaran'), 0, ',', '.') }}</div>
                     </div>
-                    <div class="rounded-xl p-4 border-2" style="border-color: #00B3AC; background-color: white">
+                    <div class="rounded-xl p-4 border-1" style="border-color: #00B3AC; background-color: white">
                         <div class="text-sm font-medium" style="color: #007E78">Jumlah Responden</div>
                         <div class="text-3xl font-bold" style="color: #005050">{{ $usulanList->pluck('id_responden')->unique()->count() }}</div>
                     </div>
                 </div>
 
                 <!-- Tabel Rekap -->
-                <div class="overflow-x-auto rounded-xl border-2" style="border-color: #BFBFBF">
+                <div class="overflow-x-auto rounded-xl border-1" style="border-color: #BFBFBF">
                     <table class="w-full text-sm">
                         <thead style="background-color: #C7EDEB">
                             <tr>
