@@ -197,6 +197,10 @@
                         <div>• <span class="font-medium">IKK</span> = Indikator Kinerja Kegiatan</div>
                     </div>
                 </div>
+                <!-- Footer Info -->
+                <div class="text-center text-xs mt-4" style="color: #7F7F7F">
+                    Setditjen Kesprimkom © 2025 Kementerian Kesehatan RI
+                </div>
             </div>
         </div>
     </div>
