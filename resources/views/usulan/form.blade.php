@@ -123,18 +123,18 @@
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Nama *</label>
-                                    <input type="text" name="nama" required
+                                    <input type="text" name="nama" required placeholder="Nama lengkap anda"
                                         class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
                                         style="border-color: #eeeeee; focus:border-color: #00B3AC">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Instansi *</label>
-                                    <input type="text" name="instansi" required
+                                    <input type="text" name="instansi" required placeholder="Cth: Dinkes Kota Bogor"
                                         class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #eeeeee">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Jabatan *</label>
-                                    <input type="text" name="jabatan" required
+                                    <input type="text" name="jabatan" required placeholder="Cth: Kabid Yankes"
                                         class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #eeeeee">
                                 </div>
                             </div>
@@ -161,9 +161,8 @@
                                             </option>
                                         @endforeach
                                     </select>
-                                </div>
-
-                                <div>
+                                </div> 
+                                <div class="md:col-span-2">
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Tingkat *</label>
                                     <select name="tingkat_bok" required class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
                                         style="border-color: #eeeeee">
@@ -174,47 +173,47 @@
                                     </select>
                                 </div>
 
-                                <div>
-                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Volume *</label>
-                                    <input type="number" name="volume" required min="1"
-                                        class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #eeeeee">
-                                </div>
-
-                                <div>
-                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Satuan *</label>
-                                    <input type="text" name="satuan" required
-                                        class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #eeeeee"
-                                        placeholder="Contoh: orang, kegiatan, paket">
-                                </div>
-
-                                <div>
-                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Frekuensi/Tahun *</label>
-                                    <input type="number" name="frekuensi_tahun" required min="1"
-                                        class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #eeeeee">
-                                </div>
-
-                                <div>
-                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Anggaran (Rp) *</label>
-                                    <input type="number" name="anggaran" required min="0" step="0.01"
-                                        class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #eeeeee">
-                                </div>
-
                                 <div class="md:col-span-2">
-                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Saran Kegiatan *</label>
-                                    <textarea name="saran_kegiatan" required rows="3" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
+                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Nama Kegiatan *</label>
+                                    <textarea name="saran_kegiatan" required rows="2" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" placeholder="Nama Kegiatan yang anda usulkan..."
                                         style="border-color: #eeeeee"></textarea>
                                 </div>
 
                                 <div class="md:col-span-2">
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Detail Kegiatan *</label>
-                                    <textarea name="detail_kegiatan" required rows="3" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
+                                    <textarea name="detail_kegiatan" required rows="3" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" placeholder="Jelaskan kegiatan yang anda usulkan..."
                                         style="border-color: #eeeeee"></textarea>
                                 </div>
 
                                 <div class="md:col-span-2">
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Kriteria Penerima BOK *</label>
-                                    <textarea name="keriteria_penerima_bok" required rows="3" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
+                                    <textarea name="keriteria_penerima_bok" required rows="3" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" placeholder="Rincikan kriteria penerima BOK untuk kegiatan ini..."
                                         style="border-color: #eeeeee"></textarea>
+                                </div> 
+
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Volume *</label>
+                                    <input type="number" name="volume" required min="1" placeholder="Hanya angka..."
+                                        class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #eeeeee">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Satuan Volume*</label>
+                                    <input type="text" name="satuan" required
+                                        class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #eeeeee"
+                                        placeholder="Contoh: orang, kegiatan, paket, hari...">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Frekuensi/Tahun *</label>
+                                    <input type="number" name="frekuensi_tahun" required min="1" placeholder="Jumlah kegiatan dalam 1 tahun..."
+                                        class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #eeeeee">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Anggaran (Rp) *</label>
+                                    <input type="number" name="anggaran" required min="0" step="0.01" placeholder="Anggaran kegiatan dalam 1 tahun..."
+                                        class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #eeeeee">
                                 </div>
                             </div>
 

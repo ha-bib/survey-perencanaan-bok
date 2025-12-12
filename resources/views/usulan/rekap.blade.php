@@ -163,7 +163,7 @@
                     <div class="rounded-lg p-2" style="background-color: #F4F7C2">
                         <div class="text-xs font-medium" style="color: #646400">Anggaran</div>
                         <div class="text-lg font-bold" style="color: #646400" id="totalAnggaran">
-                            {{ number_format($usulanList->sum('anggaran') / 1000000, 1) }}M</div>
+                            {{ number_format($usulanList->sum('anggaran') / 1000000, 1) }}JT</div>
                     </div>
                     <div class="rounded-lg p-2 border" style="border-color: #00B3AC; background-color: white">
                         <div class="text-xs font-medium" style="color: #007E78">Responden</div>
@@ -252,7 +252,7 @@
                                     </div>
                                 </div>
                                 <div class="text-right">
-                                    <div class="font-bold" style="color: #005050">Rp {{ number_format($usulan->anggaran / 1000000, 1) }}jt</div>
+                                    <div class="font-bold" style="color: #005050">Rp {{ number_format($usulan->anggaran / 1000000, 1) }}JT</div>
                                 </div>
                             </div>
                         </div>
