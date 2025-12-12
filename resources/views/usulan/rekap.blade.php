@@ -112,7 +112,7 @@
 
             <div class="p-4">
                 <!-- Filter -->
-                <div class="bg-gradient-to-r from-[#edfffe] to-[#edfffe] rounded-xl p-3 mb-4 border-1" style="border-color: #00B3AC">
+                <div class="bg-gradient-to-r from-[#edfffe] to-[#edfffe] rounded-xl p-3 mb-4 border-2" style="border-color: #00B3AC">
                     <div class="grid grid-cols-1 md:grid-cols-7 gap-2">
                         <div>
                             <select id="filterTingkat" class="w-full px-2 py-1.5 border rounded-lg text-xs" style="border-color: #BFBFBF">

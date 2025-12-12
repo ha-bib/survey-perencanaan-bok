@@ -16,7 +16,7 @@
             --olive-green: #646400;
             --lime-yellow: #D2DE00;
             --pale-yellow: #F4F7C2;
-            --light-gray: #BFBFBF;
+            --light-gray: #eeeeee;
             --medium-gray: #7F7F7F;
             --bright-red: #C00000;
         }
@@ -88,7 +88,7 @@
                         $responden = \App\Models\Responden::find(session('responden_id'));
                     @endphp
                     @if ($responden)
-                        <div class="bg-gradient-to-r from-[#edfffe] to-[#edfffe] border-1 border-[#00B3AC] rounded-xl p-4 mb-4">
+                        <div class="bg-gradient-to-r from-[#edfffe] to-[#edfffe] border-2 border-[#00B3AC] rounded-xl p-4 mb-4">
                             <div class="text-xs font-medium mb-2" style="color: #007E78">✓ Responden Aktif</div>
                             <div class="flex flex-col sm:flex-row sm:items-center gap-2 text-sm">
                                 <div class="font-semibold" style="color: #005050">{{ $responden->nama }}</div>
@@ -102,20 +102,20 @@
                 @endif
 
                 @if (session('success'))
-                    <div class="border-1 border-[#00B3AC] text-sm px-4 py-3 rounded-xl mb-4" style="background-color: #C7EDEB; color: #005050">
+                    <div class="border-2 border-[#00B3AC] text-sm px-4 py-3 rounded-xl mb-4" style="background-color: #C7EDEB; color: #005050">
                         ✓ {{ session('success') }}
                     </div>
                 @endif
 
                 @if (session('error'))
-                    <div class="border-1 border-[#C00000] text-sm px-4 py-3 rounded-xl mb-4" style="background-color: #ffebee; color: #C00000">
+                    <div class="border-2 border-[#C00000] text-sm px-4 py-3 rounded-xl mb-4" style="background-color: #ffebee; color: #C00000">
                         ✕ {{ session('error') }}
                     </div>
                 @endif
 
                 @if (!$respondenId)
                     <!-- Form Data Responden -->
-                    <div class="border-1 accent-border rounded-xl p-4 md:p-6 mb-0 bg-gradient-to-r from-[#edfffe] to-[#edfffe] ">
+                    <div class="border-2 accent-border rounded-xl p-4 md:p-6 mb-0 bg-gradient-to-r from-[#edfffe] to-[#edfffe] ">
                         <h2 class="text-lg md:text-xl font-semibold mb-4" style="color: #005050">Isi Data Responden Berikut</h2>
                         <form action="{{ route('usulan.storeUser') }}" method="POST">
                             @csrf
@@ -123,18 +123,18 @@
                                 <div>
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Nama *</label>
                                     <input type="text" name="nama" required
-                                        class="w-full px-3 py-2 border-1 rounded-xl focus:outline-none text-sm"
-                                        style="border-color: #BFBFBF; focus:border-color: #00B3AC">
+                                        class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
+                                        style="border-color: #eeeeee; focus:border-color: #00B3AC">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Instansi *</label>
                                     <input type="text" name="instansi" required
-                                        class="w-full px-3 py-2 border-1 rounded-xl focus:outline-none text-sm" style="border-color: #BFBFBF">
+                                        class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #eeeeee">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Jabatan *</label>
                                     <input type="text" name="jabatan" required
-                                        class="w-full px-3 py-2 border-1 rounded-xl focus:outline-none text-sm" style="border-color: #BFBFBF">
+                                        class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #eeeeee">
                                 </div>
                             </div>
                             <button type="submit" class="mt-4 w-full btn-primary text-white px-6 py-3 rounded-xl transition font-semibold">
@@ -144,7 +144,7 @@
                     </div>
                 @else
                     <!-- Form Usulan -->
-                    <div class="border-1 accent-border rounded-xl p-4 md:p-6 mb-0 bg-gradient-to-r from-[#edfffe] to-[#edfffe]">
+                    <div class="border-2 accent-border rounded-xl p-4 md:p-6 mb-0 bg-gradient-to-r from-[#edfffe] to-[#edfffe]">
                         <h2 class="text-lg md:text-xl font-semibold mb-4" style="color: #005050">Tambah Usulan</h2>
 
                         <form action="{{ route('usulan.store') }}" method="POST" id="usulanForm">
@@ -152,8 +152,8 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="md:col-span-2">
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Indikator *</label>
-                                    <select name="indikator" required class="w-full px-3 py-2 border-1 rounded-xl focus:outline-none text-sm"
-                                        style="border-color: #BFBFBF">
+                                    <select name="indikator" required class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
+                                        style="border-color: #eeeeee">
                                         <option value="">-- Pilih Indikator --</option>
                                         @foreach ($indikators as $ind)
                                             <option value="{{ $ind->id }}">{{ $ind->nomor }} - {{ $ind->nama }} ({{ $ind->tingkat }})
@@ -164,8 +164,8 @@
 
                                 <div>
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Tingkat *</label>
-                                    <select name="tingkat_bok" required class="w-full px-3 py-2 border-1 rounded-xl focus:outline-none text-sm"
-                                        style="border-color: #BFBFBF">
+                                    <select name="tingkat_bok" required class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
+                                        style="border-color: #eeeeee">
                                         <option value="">-- Pilih Tingkat --</option>
                                         <option value="Provinsi">Provinsi</option>
                                         <option value="Kabupaten/Kota">Kabupaten/Kota</option>
@@ -176,44 +176,44 @@
                                 <div>
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Volume *</label>
                                     <input type="number" name="volume" required min="1"
-                                        class="w-full px-3 py-2 border-1 rounded-xl focus:outline-none text-sm" style="border-color: #BFBFBF">
+                                        class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #eeeeee">
                                 </div>
 
                                 <div>
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Satuan *</label>
                                     <input type="text" name="satuan" required
-                                        class="w-full px-3 py-2 border-1 rounded-xl focus:outline-none text-sm" style="border-color: #BFBFBF"
+                                        class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #eeeeee"
                                         placeholder="Contoh: orang, kegiatan, paket">
                                 </div>
 
                                 <div>
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Frekuensi/Tahun *</label>
                                     <input type="number" name="frekuensi_tahun" required min="1"
-                                        class="w-full px-3 py-2 border-1 rounded-xl focus:outline-none text-sm" style="border-color: #BFBFBF">
+                                        class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #eeeeee">
                                 </div>
 
                                 <div>
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Anggaran (Rp) *</label>
                                     <input type="number" name="anggaran" required min="0" step="0.01"
-                                        class="w-full px-3 py-2 border-1 rounded-xl focus:outline-none text-sm" style="border-color: #BFBFBF">
+                                        class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #eeeeee">
                                 </div>
 
                                 <div class="md:col-span-2">
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Saran Kegiatan *</label>
-                                    <textarea name="saran_kegiatan" required rows="3" class="w-full px-3 py-2 border-1 rounded-xl focus:outline-none text-sm"
-                                        style="border-color: #BFBFBF"></textarea>
+                                    <textarea name="saran_kegiatan" required rows="3" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
+                                        style="border-color: #eeeeee"></textarea>
                                 </div>
 
                                 <div class="md:col-span-2">
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Detail Kegiatan *</label>
-                                    <textarea name="detail_kegiatan" required rows="3" class="w-full px-3 py-2 border-1 rounded-xl focus:outline-none text-sm"
-                                        style="border-color: #BFBFBF"></textarea>
+                                    <textarea name="detail_kegiatan" required rows="3" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
+                                        style="border-color: #eeeeee"></textarea>
                                 </div>
 
                                 <div class="md:col-span-2">
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Kriteria Penerima BOK *</label>
-                                    <textarea name="keriteria_penerima_bok" required rows="3" class="w-full px-3 py-2 border-1 rounded-xl focus:outline-none text-sm"
-                                        style="border-color: #BFBFBF"></textarea>
+                                    <textarea name="keriteria_penerima_bok" required rows="3" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
+                                        style="border-color: #eeeeee"></textarea>
                                 </div>
                             </div>
 
@@ -226,7 +226,7 @@
 
                     <!-- Daftar Usulan -->
                     @if ($usulanList->count() > 0)
-                        <div class="border-1 rounded-xl p-4 md:p-6 bg-white" style="border-color: #BFBFBF">
+                        <div class="border-2 rounded-xl p-4 md:p-6 bg-white" style="border-color: #eeeeee">
                             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
                                 <h2 class="text-lg md:text-xl font-semibold" style="color: #005050">Daftar Usulan Anda ({{ $usulanList->count() }})
                                 </h2>
@@ -262,7 +262,7 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($usulanList as $index => $usulan)
-                                                <tr class="border-b hover:bg-gray-50" style="border-color: #BFBFBF">
+                                                <tr class="border-b hover:bg-gray-50" style="border-color: #eeeeee">
                                                     <td class="px-3 md:px-4 py-3 text-xs md:text-sm" style="color: #005050">{{ $index + 1 }}
                                                     </td>
                                                     <td class="px-3 md:px-4 py-3 text-xs md:text-sm" style="color: #007E78">
