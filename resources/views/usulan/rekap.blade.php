@@ -355,7 +355,7 @@
             });
 
             document.getElementById('totalUsulan').textContent = visibleCount;
-            document.getElementById('totalAnggaran').textContent = (totalAnggaran / 1000000).toFixed(1) + 'M';
+            document.getElementById('totalAnggaran').textContent = (totalAnggaran / 1000000).toLocaleString('en-EN', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'JT';
             document.getElementById('totalResponden').textContent = uniqueResponden.size;
             document.getElementById('visibleCount').textContent = visibleCount;
 
