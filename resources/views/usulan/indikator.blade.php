@@ -196,6 +196,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-1 text-sm" style="color: #007E78">
                         <div>• <span class="font-medium">IKP</span> = Indikator Kinerja Program</div>
                         <div>• <span class="font-medium">IKK</span> = Indikator Kinerja Kegiatan</div>
+                        <div>• Tidak semua indikator Kesehatan Primker dan Komunitas dicantumkan dalam daftar ini</div>
                     </div>
                 </div>
                 <!-- Footer Info -->
