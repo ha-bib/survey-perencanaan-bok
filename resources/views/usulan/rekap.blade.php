@@ -110,11 +110,10 @@
                 </div>
             </div>
 
-
             <div class="p-4">
-                <!-- Filter -->
+                <!-- Filter & Sort -->
                 <div class="bg-gradient-to-r from-[#edfffe] to-[#edfffe] rounded-xl p-3 mb-4 border-2" style="border-color: #00B3AC">
-                    <div class="grid grid-cols-1 md:grid-cols-7 gap-2">
+                    <div class="grid grid-cols-1 md:grid-cols-8 gap-2">
                         <div>
                             <select id="filterTingkat" class="w-full px-2 py-1.5 border rounded-lg text-xs" style="border-color: #BFBFBF">
                                 <option value="">Semua Tingkat</option>
@@ -132,12 +131,20 @@
                             </select>
                         </div>
                         <div>
-                            <input type="text" id="filterKegiatan" placeholder="Cari kegiatan..."
+                            <input type="text" id="filterKegiatan" placeholder="Cari rincian..."
                                 class="w-full px-2 py-1.5 border rounded-lg text-xs" style="border-color: #BFBFBF">
                         </div>
                         <div>
                             <input type="text" id="filterInstansi" placeholder="Instansi..." class="w-full px-2 py-1.5 border rounded-lg text-xs"
                                 style="border-color: #BFBFBF">
+                        </div>
+                        <div>
+                            <select id="sortBy" class="w-full px-2 py-1.5 border rounded-lg text-xs" style="border-color: #BFBFBF">
+                                <option value="terbaru">Terbaru</option>
+                                <option value="terlama">Terlama</option>
+                                <option value="like">Like terbanyak</option>
+                                <option value="dislike">Dislike terbanyak</option>
+                            </select>
                         </div>
                         <div>
                             <button id="resetFilter" class="w-full px-2 py-1.5 rounded-lg text-white text-xs font-medium"
@@ -158,106 +165,20 @@
                 <div class="grid grid-cols-3 gap-2 mb-4">
                     <div class="rounded-lg p-2" style="background-color: #C7EDEB">
                         <div class="text-xs font-medium" style="color: #007E78">Usulan</div>
-                        <div class="text-xl font-bold" style="color: #005050" id="totalUsulan">{{ $usulanList->count() }}</div>
+                        <div class="text-xl font-bold" style="color: #005050" id="totalUsulan">{{ $totalUsulan }}</div>
                     </div>
                     <div class="rounded-lg p-2" style="background-color: #F4F7C2">
-                        <div class="text-xs font-medium" style="color: #646400">Anggaran</div>
-                        <div class="text-lg font-bold" style="color: #646400" id="totalAnggaran">
-                            {{ number_format($usulanList->sum('anggaran') / 1000000, 1) }}JT</div>
+                        <div class="text-xs font-medium" style="color: #646400">Like</div>
+                        <div class="text-lg font-bold" style="color: #646400" id="totalLikes">{{ $totalLikes }}</div>
                     </div>
                     <div class="rounded-lg p-2 border" style="border-color: #00B3AC; background-color: white">
                         <div class="text-xs font-medium" style="color: #007E78">Responden</div>
-                        <div class="text-xl font-bold" style="color: #005050" id="totalResponden">
-                            {{ $usulanList->pluck('id_responden')->unique()->count() }}</div>
+                        <div class="text-xl font-bold" style="color: #005050" id="totalResponden">0</div>
                     </div>
                 </div>
 
                 <!-- Cards Container -->
-                <div id="cardsContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                    @foreach ($usulanList as $usulan)
-                        <div class="usulan-card bg-white rounded-lg border p-3" style="border-color: #BFBFBF"
-                            data-tingkat="{{ $usulan->tingkat_bok }}" data-indikator="{{ $usulan->id_indikator }}"
-                            data-kegiatan="{{ strtolower($usulan->saran_kegiatan . ' ' . $usulan->detail_kegiatan) }}"
-                            data-instansi="{{ strtolower($usulan->responden->instansi) }}" data-anggaran="{{ $usulan->anggaran }}"
-                            data-responden-id="{{ $usulan->id_responden }}" onclick="toggleCard(this)">
-
-                            <!-- Header -->
-                            <div class="flex items-start justify-between gap-2 mb-2">
-                                <div class="flex-1 min-w-0">
-                                    <h3 class="font-bold text-sm truncate" style="color: #005050">{{ $usulan->responden->nama }}</h3>
-                                    <p class="text-xs truncate" style="color: #007E78">{{ $usulan->responden->instansi }} ·
-                                        {{ $usulan->responden->jabatan }}</p>
-                                </div>
-                                <div class="flex gap-1 flex-shrink-0 items-center">
-                                    <span
-                                        class="inline-block px-2 py-0.5 text-xs font-semibold rounded-full {{ $usulan->tingkat_bok == 'Provinsi' ? 'badge-provinsi' : ($usulan->tingkat_bok == 'Kabupaten/Kota' ? 'badge-kabkota' : 'badge-puskesmas') }}">
-                                        {{ $usulan->tingkat_bok == 'Kabupaten/Kota' ? 'Kab/Kota' : $usulan->tingkat_bok }}
-                                    </span>
-                                    <svg class="expand-icon w-4 h-4" style="color: #007E78" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                    </svg>
-                                </div>
-                            </div>
-
-                            <!-- Saran Kegiatan -->
-                            <div class="mb-2 py-2 px-1 rounded" style="background-color: #f8f9fa">
-                                <div class="flex items-center justify-between gap-2">
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-xs font-medium" style="color: #007E78">
-                                            {{ Str::limit($usulan->saran_kegiatan, 80) }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Detail Content (Hidden by default) -->
-                            <div class="detail-content">
-                                <div class="space-y-1.5 mb-2 text-xs border-t pt-2" style="border-color: #BFBFBF">
-                                    <div>
-                                        <span class="font-medium" style="color: #7F7F7F">Detail Kegiatan</span><br>
-                                        <span style="color: #005050">{{ $usulan->detail_kegiatan }}</span>
-                                    </div>
-                                    <div>
-                                        <span class="font-medium" style="color: #7F7F7F">Kriteria Penerima BOK</span><br>
-                                        <span style="color: #005050">{{ $usulan->keriteria_penerima_bok }}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Indikator -->
-                            <div class="p-1 rounded mb-2" style="background-color: #f9fafa">
-                                <div class="flex items-center justify-between gap-2">
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-xs font-medium truncate" style="color: #007E78" title="{{ $usulan->indikator->nama }}">
-                                            {{ $usulan->indikator->nomor }} · {{ Str::limit($usulan->indikator->nama, 40) }}
-                                        </p>
-                                    </div>
-                                    <span
-                                        class="inline-block px-2 py-0.5 text-xs font-semibold rounded-full flex-shrink-0 {{ $usulan->indikator->tingkat == 'IKP' ? 'badge-ikp' : 'badge-ikk' }}">
-                                        {{ $usulan->indikator->tingkat }}
-                                    </span>
-                                </div>
-                            </div>
-
-                            <!-- Footer -->
-                            <div class="flex items-center justify-between pt-2 border-t text-xs" style="border-color: #BFBFBF">
-                                <div class="flex gap-3">
-                                    <div>
-                                        <span style="color: #7F7F7F">Vol:</span>
-                                        <span class="font-semibold ml-1" style="color: #007E78">{{ $usulan->volume }} {{ $usulan->satuan }}</span>
-                                    </div>
-                                    <div>
-                                        <span style="color: #7F7F7F">Frek:</span>
-                                        <span class="font-semibold ml-1" style="color: #007E78">{{ $usulan->frekuensi_tahun }}x</span>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <div class="font-bold" style="color: #005050">Rp {{ number_format($usulan->anggaran / 1000000, 1) }}JT</div>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
+                <div id="cardsContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-3"></div>
 
                 <!-- No Results -->
                 <div id="noResults" class="hidden py-8 text-center">
@@ -268,26 +189,115 @@
 
                 <!-- Footer Info -->
                 <div class="text-center text-xs mt-3" style="color: #7F7F7F">
-                    Menampilkan <span id="visibleCount">{{ $usulanList->count() }}</span> dari <span
-                        id="totalCount">{{ $usulanList->count() }}</span> usulan · <span class="italic">Klik kartu untuk melihat detail</span>
+                    Menampilkan <span id="visibleCount">0</span> dari <span
+                        id="totalCount">0</span> usulan · <span class="italic">Klik kartu untuk melihat detail</span>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        // Parse JSON data
+        const usulanData = {!! $usulanJson !!};
+        let filteredData = [...usulanData];
+        const hasResponden = {{ session('responden_id') ? 'true' : 'false' }};
+
+        // DOM elements
         const filterTingkat = document.getElementById('filterTingkat');
         const filterIndikator = document.getElementById('filterIndikator');
         const filterKegiatan = document.getElementById('filterKegiatan');
         const filterInstansi = document.getElementById('filterInstansi');
+        const sortBy = document.getElementById('sortBy');
         const resetFilterBtn = document.getElementById('resetFilter');
         const expandAllBtn = document.getElementById('expandAll');
         const expandText = document.getElementById('expandText');
         const cardsContainer = document.getElementById('cardsContainer');
         const noResults = document.getElementById('noResults');
-        const cards = document.querySelectorAll('.usulan-card');
+        
         let allExpanded = false;
 
+        // Helper: Get badge class
+        function getBadgeClass(tingkat) {
+            if (tingkat === 'Provinsi') return 'badge-provinsi';
+            if (tingkat === 'Kabupaten/Kota') return 'badge-kabkota';
+            return 'badge-puskesmas';
+        }
+
+        function getTingkatLabel(tingkat) {
+            return tingkat === 'Kabupaten/Kota' ? 'Kab/Kota' : tingkat;
+        }
+
+        // Create card HTML
+        function createCard(usulan) {
+            return `
+                <div class="usulan-card bg-white rounded-lg border p-3" style="border-color: #BFBFBF"
+                    data-tingkat="${usulan.tingkat_bok}" data-indikator="${usulan.indikator.id}"
+                    data-id="${usulan.id}" onclick="toggleCard(this)">
+
+                    <!-- Header -->
+                    <div class="flex items-start justify-between gap-2 mb-2">
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-bold text-sm truncate" style="color: #005050">${usulan.responden.nama}</h3>
+                            <p class="text-xs truncate" style="color: #007E78">${usulan.responden.instansi} · ${usulan.responden.jabatan}</p>
+                        </div>
+                        <div class="flex gap-1 flex-shrink-0 items-center">
+                            <span class="inline-block px-2 py-0.5 text-xs font-semibold rounded-full ${getBadgeClass(usulan.tingkat_bok)}">
+                                ${getTingkatLabel(usulan.tingkat_bok)}
+                            </span>
+                            <svg class="expand-icon w-4 h-4" style="color: #007E78" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Rincian Menu -->
+                    <div class="mb-2 py-2 px-1 rounded" style="background-color: #f8f9fa">
+                        <p class="text-xs font-medium truncate" style="color: #007E78" title="${usulan.rincian_menu}">
+                            ${usulan.rincian_menu.substring(0, 80)}
+                        </p>
+                    </div>
+
+                    <!-- Detail Content (Hidden by default) -->
+                    <div class="detail-content">
+                        <div class="space-y-1.5 mb-2 text-xs border-t pt-2" style="border-color: #BFBFBF">
+                            <div>
+                                <span class="font-medium" style="color: #7F7F7F">Detail Kegiatan</span><br>
+                                <span style="color: #005050">${usulan.detail_kegiatan}</span>
+                            </div>
+                            <div>
+                                <span class="font-medium" style="color: #7F7F7F">Sasaran Rincian Menu</span><br>
+                                <span style="color: #005050">${usulan.sasaran_rincian_menu}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Indikator -->
+                    <div class="p-1 rounded mb-2" style="background-color: #f9fafa">
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="flex-1 min-w-0">
+                                <p class="text-xs font-medium truncate" style="color: #007E78" title="${usulan.indikator.nama}">
+                                    ${usulan.indikator.nomor} · ${usulan.indikator.nama.substring(0, 40)}
+                                </p>
+                            </div>
+                            <span class="inline-block px-2 py-0.5 text-xs font-semibold rounded-full flex-shrink-0 ${usulan.indikator.tingkat === 'IKP' ? 'badge-ikp' : 'badge-ikk'}">
+                                ${usulan.indikator.tingkat}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Footer: Like / Dislike -->
+                    <div class="flex items-center justify-between pt-2 border-t text-xs" style="border-color: #BFBFBF">
+                        <div class="flex gap-3 items-center">
+                            <button class="px-2 py-1 rounded border like-btn" data-id="${usulan.id}" data-type="like" style="border-color:#C7EDEB; color:#005050" onclick="event.stopPropagation(); handleReaction(this)">👍 <span class="like-count">${usulan.likes_count}</span></button>
+                            <button class="px-2 py-1 rounded border dislike-btn" data-id="${usulan.id}" data-type="dislike" style="border-color:#F4F7C2; color:#646400" onclick="event.stopPropagation(); handleReaction(this)">👎 <span class="dislike-count">${usulan.dislikes_count}</span></button>
+                        </div>
+                        <div class="text-right text-[10px]" style="color:#7F7F7F">${usulan.created_at}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Toggle card expand/collapse
         function toggleCard(card) {
             const detailContent = card.querySelector('.detail-content');
             const isExpanded = card.classList.contains('expanded');
@@ -301,13 +311,12 @@
             }
         }
 
+        // Expand all cards
         function expandAllCards() {
             allExpanded = !allExpanded;
-
-            cards.forEach(card => {
+            document.querySelectorAll('.usulan-card').forEach(card => {
                 if (card.style.display !== 'none') {
                     const detailContent = card.querySelector('.detail-content');
-
                     if (allExpanded) {
                         card.classList.add('expanded');
                         detailContent.classList.add('show');
@@ -317,49 +326,100 @@
                     }
                 }
             });
-
             expandText.textContent = allExpanded ? 'Collapse Semua' : 'Expand Semua';
         }
 
+        // Handle like/dislike
+        function handleReaction(btn) {
+            if (!hasResponden) {
+                alert('Anda harus mengisi survey untuk meng-like/dislike.');
+                return;
+            }
+
+            const usulanId = btn.getAttribute('data-id');
+            const type = btn.getAttribute('data-type');
+
+            fetch(`{{ url('/usulan') }}/${usulanId}/react`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ reaction: type })
+            })
+            .then(r => {
+                if (!r.ok) {
+                    return r.json().then(data => { throw new Error(data.message || 'Error'); });
+                }
+                return r.json();
+            })
+            .then(data => {
+                const card = btn.closest('.usulan-card');
+                const likeCount = card.querySelector('.like-count');
+                const dislikeCount = card.querySelector('.dislike-count');
+                likeCount.textContent = data.likes;
+                dislikeCount.textContent = data.dislikes;
+                
+                // Update usulan data
+                const idx = usulanData.findIndex(u => u.id == usulanId);
+                if (idx >= 0) {
+                    usulanData[idx].likes_count = data.likes;
+                    usulanData[idx].dislikes_count = data.dislikes;
+                }
+                
+                // Update total likes
+                let totalLikes = usulanData.reduce((sum, u) => sum + u.likes_count, 0);
+                document.getElementById('totalLikes').textContent = totalLikes;
+            })
+            .catch(err => alert(err.message || 'Terjadi kesalahan, coba lagi.'));
+        }
+
+        // Filter & Sort
         function applyFilters() {
             const tingkat = filterTingkat.value;
             const indikator = filterIndikator.value;
             const kegiatan = filterKegiatan.value.toLowerCase().trim();
             const instansi = filterInstansi.value.toLowerCase().trim();
+            const sortValue = sortBy.value;
 
-            let visibleCount = 0;
-            let totalAnggaran = 0;
-            let uniqueResponden = new Set();
-
-            cards.forEach(card => {
-                const cardTingkat = card.dataset.tingkat;
-                const cardIndikator = card.dataset.indikator;
-                const cardKegiatan = card.dataset.kegiatan;
-                const cardInstansi = card.dataset.instansi;
-                const cardAnggaran = parseInt(card.dataset.anggaran);
-                const cardRespondenId = card.dataset.respondenId;
-
-                const matchTingkat = !tingkat || cardTingkat === tingkat;
-                const matchIndikator = !indikator || cardIndikator === indikator;
-                const matchKegiatan = !kegiatan || cardKegiatan.includes(kegiatan);
-                const matchInstansi = !instansi || cardInstansi.includes(instansi);
-
-                if (matchTingkat && matchIndikator && matchKegiatan && matchInstansi) {
-                    card.style.display = '';
-                    visibleCount++;
-                    totalAnggaran += cardAnggaran;
-                    uniqueResponden.add(cardRespondenId);
-                } else {
-                    card.style.display = 'none';
-                }
+            // Filter
+            filteredData = usulanData.filter(u => {
+                const matchTingkat = !tingkat || u.tingkat_bok === tingkat;
+                const matchIndikator = !indikator || u.indikator.id == indikator;
+                const matchKegiatan = !kegiatan || 
+                    (u.rincian_menu.toLowerCase().includes(kegiatan) || 
+                     u.detail_kegiatan.toLowerCase().includes(kegiatan));
+                const matchInstansi = !instansi || u.responden.instansi.toLowerCase().includes(instansi);
+                return matchTingkat && matchIndikator && matchKegiatan && matchInstansi;
             });
 
-            document.getElementById('totalUsulan').textContent = visibleCount;
-            document.getElementById('totalAnggaran').textContent = (totalAnggaran / 1000000).toLocaleString('en-EN', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'JT';
-            document.getElementById('totalResponden').textContent = uniqueResponden.size;
-            document.getElementById('visibleCount').textContent = visibleCount;
+            // Sort
+            if (sortValue === 'like') {
+                filteredData.sort((a, b) => b.likes_count - a.likes_count);
+            } else if (sortValue === 'dislike') {
+                filteredData.sort((a, b) => b.dislikes_count - a.dislikes_count);
+            } else if (sortValue === 'terlama') {
+                filteredData.sort((a, b) => new Date(a.created_at_iso) - new Date(b.created_at_iso));
+            } else { // terbaru (default)
+                filteredData.sort((a, b) => new Date(b.created_at_iso) - new Date(a.created_at_iso));
+            }
 
-            if (visibleCount === 0) {
+            renderCards();
+        }
+
+        // Render cards
+        function renderCards() {
+            cardsContainer.innerHTML = filteredData.map(u => createCard(u)).join('');
+
+            // Update stats
+            const uniqueResponden = [...new Set(filteredData.map(u => u.responden.id))].length;
+            document.getElementById('totalUsulan').textContent = filteredData.length;
+            document.getElementById('totalResponden').textContent = uniqueResponden;
+            document.getElementById('visibleCount').textContent = filteredData.length;
+            document.getElementById('totalCount').textContent = usulanData.length;
+
+            // Show/hide no results
+            if (filteredData.length === 0) {
                 cardsContainer.style.display = 'none';
                 noResults.classList.remove('hidden');
             } else {
@@ -368,22 +428,29 @@
             }
         }
 
+        // Reset filters
         function resetFilters() {
             filterTingkat.value = '';
             filterIndikator.value = '';
             filterKegiatan.value = '';
             filterInstansi.value = '';
+            sortBy.value = 'terbaru';
             applyFilters();
         }
 
-        resetFilterBtn.addEventListener('click', resetFilters);
-        expandAllBtn.addEventListener('click', expandAllCards);
+        // Event listeners
         filterTingkat.addEventListener('change', applyFilters);
         filterIndikator.addEventListener('change', applyFilters);
         filterKegiatan.addEventListener('input', applyFilters);
         filterInstansi.addEventListener('input', applyFilters);
+        sortBy.addEventListener('change', applyFilters);
+        resetFilterBtn.addEventListener('click', resetFilters);
+        expandAllBtn.addEventListener('click', expandAllCards);
 
-        document.getElementById('totalCount').textContent = cards.length;
+        // Initial render
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCards();
+        });
     </script>
 </body>
 

@@ -132,8 +132,8 @@
                         <div class="text-3xl font-bold" style="color: #005050">{{ $usulanList->total() }}</div>
                     </div>
                     <div class="rounded-xl p-4" style="background-color: #F4F7C2">
-                        <div class="text-sm font-medium" style="color: #646400">Total Anggaran</div>
-                        <div class="text-2xl font-bold" style="color: #646400">Rp {{ number_format($usulanList->sum('anggaran'), 0, ',', '.') }}</div>
+                        <div class="text-sm font-medium" style="color: #646400">Total Like</div>
+                        <div class="text-2xl font-bold" style="color: #646400">{{ $usulanList->sum('likes_count') }}</div>
                     </div>
                     <div class="rounded-xl p-4 border-2" style="border-color: #00B3AC; background-color: white">
                         <div class="text-sm font-medium" style="color: #007E78">Jumlah Responden</div>
@@ -151,12 +151,11 @@
                                 <th class="px-4 py-3 text-left font-semibold" style="color: #005050">Instansi</th>
                                 <th class="px-4 py-3 text-left font-semibold" style="color: #005050">Indikator</th>
                                 <th class="px-4 py-3 text-left font-semibold" style="color: #005050">Tingkat</th>
-                                <th class="px-4 py-3 text-left font-semibold" style="color: #005050">Saran Kegiatan</th>
+                                <th class="px-4 py-3 text-left font-semibold" style="color: #005050">Rincian Menu</th>
                                 <th class="px-4 py-3 text-left font-semibold" style="color: #005050">Detail Kegiatan</th>
-                                <th class="px-4 py-3 text-left font-semibold" style="color: #005050">Kriteria BOK</th>
-                                <th class="px-4 py-3 text-left font-semibold" style="color: #005050">Volume</th>
-                                <th class="px-4 py-3 text-left font-semibold" style="color: #005050">Frekuensi</th>
-                                <th class="px-4 py-3 text-left font-semibold" style="color: #005050">Anggaran</th>
+                                <th class="px-4 py-3 text-left font-semibold" style="color: #005050">Sasaran Rincian Menu</th>
+                                <th class="px-4 py-3 text-left font-semibold" style="color: #005050">Like</th>
+                                <th class="px-4 py-3 text-left font-semibold" style="color: #005050">Dislike</th>
                                 <th class="px-4 py-3 text-left font-semibold" style="color: #005050">Tanggal</th>
                             </tr>
                         </thead>
@@ -182,8 +181,8 @@
                                     </span>
                                 </td>
                                 <td class="px-4 py-3 max-w-xs">
-                                    <div class="inline-block" title="{{ $usulan->saran_kegiatan }}" style="color: #007E78">
-                                        {{ Str::limit($usulan->saran_kegiatan, 50) }}
+                                    <div class="inline-block" title="{{ $usulan->rincian_menu }}" style="color: #007E78">
+                                        {{ Str::limit($usulan->rincian_menu, 50) }}
                                     </div>
                                 </td>
                                 <td class="px-4 py-3 max-w-xs">
@@ -192,20 +191,19 @@
                                     </div>
                                 </td>
                                 <td class="px-4 py-3 max-w-xs">
-                                    <div class="inline-block" title="{{ $usulan->keriteria_penerima_bok }}" style="color: #007E78">
-                                        {{ Str::limit($usulan->keriteria_penerima_bok, 50) }}
+                                    <div class="inline-block" title="{{ $usulan->sasaran_rincian_menu }}" style="color: #007E78">
+                                        {{ Str::limit($usulan->sasaran_rincian_menu, 50) }}
                                     </div>
                                 </td>
-                                <td class="px-4 py-3" style="color: #007E78">{{ $usulan->volume }} {{ $usulan->satuan }}</td>
-                                <td class="px-4 py-3" style="color: #007E78">{{ $usulan->frekuensi_tahun }} kali/th</td>
-                                <td class="px-4 py-3 font-medium text-end truncate" style="color: #005050">{{ number_format($usulan->anggaran, 0, ',', '.') }}</td>
+                                <td class="px-4 py-3" style="color: #007E78">{{ $usulan->likes_count }}</td>
+                                <td class="px-4 py-3" style="color: #007E78">{{ $usulan->dislikes_count }}</td>
                                 <td class="px-4 py-3 text-xs" style="color: #7F7F7F">
                                     {{ $usulan->created_at->format('d/m/Y H:i') }}
                                 </td>
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="12" class="px-4 py-8 text-center" style="color: #7F7F7F">
+                                <td colspan="11" class="px-4 py-8 text-center" style="color: #7F7F7F">
                                     Belum ada data usulan
                                 </td>
                             </tr>

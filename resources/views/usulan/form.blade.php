@@ -174,8 +174,8 @@
                                 </div>
 
                                 <div class="md:col-span-2">
-                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Nama Kegiatan *</label>
-                                    <textarea name="saran_kegiatan" required rows="2" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" placeholder="Nama Kegiatan yang anda usulkan..."
+                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Rincian Menu *</label>
+                                    <textarea name="rincian_menu" required rows="2" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" placeholder="Rincian menu yang anda usulkan..."
                                         style="border-color: #eeeeee"></textarea>
                                 </div>
 
@@ -186,35 +186,10 @@
                                 </div>
 
                                 <div class="md:col-span-2">
-                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Kriteria Penerima BOK *</label>
-                                    <textarea name="keriteria_penerima_bok" required rows="3" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" placeholder="Rincikan kriteria penerima BOK untuk kegiatan ini..."
+                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Sasaran Rincian Menu *</label>
+                                    <textarea name="sasaran_rincian_menu" required rows="3" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" placeholder="Rincikan sasaran untuk rincian menu ini..."
                                         style="border-color: #eeeeee"></textarea>
                                 </div> 
-
-                                <div>
-                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Volume *</label>
-                                    <input type="number" name="volume" required min="1" placeholder="Hanya angka..."
-                                        class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #eeeeee">
-                                </div>
-
-                                <div>
-                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Satuan Volume*</label>
-                                    <input type="text" name="satuan" required
-                                        class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #eeeeee"
-                                        placeholder="Contoh: orang, kegiatan, paket, hari...">
-                                </div>
-
-                                <div>
-                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Frekuensi/Tahun *</label>
-                                    <input type="number" name="frekuensi_tahun" required min="1" placeholder="Jumlah kegiatan dalam 1 tahun..."
-                                        class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #eeeeee">
-                                </div>
-
-                                <div>
-                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Anggaran (Rp) *</label>
-                                    <input type="number" name="anggaran" required min="0" step="0.01" placeholder="Anggaran kegiatan dalam 1 tahun..."
-                                        class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" style="border-color: #eeeeee">
-                                </div>
                             </div>
 
                             <button type="submit"
@@ -239,58 +214,52 @@
                                     </button>
                                 </form>
                             </div>
-                            <div class="overflow-x-auto -mx-4 md:mx-0">
-                                <div class="inline-block min-w-full align-middle">
-                                    <table class="min-w-full text-sm">
-                                        <thead style="background-color: #C7EDEB">
-                                            <tr>
-                                                <th class="px-3 md:px-4 py-2 text-left text-xs md:text-sm font-semibold" style="color: #005050">No
-                                                </th>
-                                                <th class="px-3 md:px-4 py-2 text-left text-xs md:text-sm font-semibold" style="color: #005050">
-                                                    Indikator</th>
-                                                <th class="px-3 md:px-4 py-2 text-left text-xs md:text-sm font-semibold" style="color: #005050">
-                                                    Tingkat</th>
-                                                <th class="px-3 md:px-4 py-2 text-left text-xs md:text-sm font-semibold" style="color: #005050">
-                                                    Saran Kegiatan</th>
-                                                <th class="px-3 md:px-4 py-2 text-left text-xs md:text-sm font-semibold" style="color: #005050">
-                                                    Volume</th>
-                                                <th class="px-3 md:px-4 py-2 text-left text-xs md:text-sm font-semibold" style="color: #005050">
-                                                    Anggaran</th>
-                                                <th class="px-3 md:px-4 py-2 text-center text-xs md:text-sm font-semibold" style="color: #005050">
-                                                    Aksi</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($usulanList as $index => $usulan)
-                                                <tr class="border-b hover:bg-gray-50" style="border-color: #eeeeee">
-                                                    <td class="px-3 md:px-4 py-3 text-xs md:text-sm" style="color: #005050">{{ $index + 1 }}
-                                                    </td>
-                                                    <td class="px-3 md:px-4 py-3 text-xs md:text-sm" style="color: #007E78">
-                                                        {{ $usulan->indikator->nomor }} - {{ Str::limit($usulan->indikator->nama, 30) }}</td>
-                                                    <td class="px-3 md:px-4 py-3 text-xs md:text-sm" style="color: #007E78">
-                                                        {{ $usulan->tingkat_bok }}</td>
-                                                    <td class="px-3 md:px-4 py-3 text-xs md:text-sm" style="color: #007E78">
-                                                        {{ Str::limit($usulan->saran_kegiatan, 40) }}</td>
-                                                    <td class="px-3 md:px-4 py-3 text-xs md:text-sm" style="color: #007E78">{{ $usulan->volume }}
-                                                        {{ $usulan->satuan }}</td>
-                                                    <td class="px-3 md:px-4 py-3 text-xs md:text-sm whitespace-nowrap" style="color: #007E78">Rp
-                                                        {{ number_format($usulan->anggaran, 0, ',', '.') }}</td>
-                                                    <td class="px-3 md:px-4 py-3 text-center">
-                                                        <form action="{{ route('usulan.destroy', $usulan->id) }}" method="POST"
-                                                            onsubmit="return confirm('Yakin ingin menghapus usulan ini?')">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="px-2 md:px-3 py-1 rounded text-xs transition text-white"
-                                                                style="background-color: #C00000">
-                                                                Hapus
-                                                            </button>
-                                                        </form>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                                @foreach ($usulanList as $index => $usulan)
+                                    <div class="bg-white rounded-lg border p-3" style="border-color: #BFBFBF">
+                                        <!-- Header -->
+                                        <div class="flex items-start justify-between gap-2 mb-2">
+                                            <div class="flex-1 min-w-0">
+                                                <p class="text-sm font-semibold truncate" style="color: #007E78">{{ $usulan->rincian_menu }}</p>
+                                            </div>
+                                            <span class="inline-block px-2 py-0.5 text-xs font-semibold rounded-full flex-shrink-0 {{ $usulan->tingkat_bok == 'Provinsi' ? 'badge-provinsi' : ($usulan->tingkat_bok == 'Kabupaten/Kota' ? 'badge-kabkota' : 'badge-puskesmas') }}">
+                                                {{ $usulan->tingkat_bok == 'Kabupaten/Kota' ? 'Kab/Kota' : $usulan->tingkat_bok }}
+                                            </span>
+                                        </div>
+
+                                        <!-- Details -->
+                                        <div class="space-y-1.5 mb-2 text-xs border-t pt-2" style="border-color: #BFBFBF">
+                                            <div>
+                                                <span class="font-medium" style="color: #7F7F7F">Detail Kegiatan</span><br>
+                                                <span style="color: #005050">{{ $usulan->detail_kegiatan }}</span>
+                                            </div>
+                                            <div>
+                                                <span class="font-medium" style="color: #7F7F7F">Sasaran Rincian Menu</span><br>
+                                                <span style="color: #005050">{{ $usulan->sasaran_rincian_menu }}</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Indikator Badge -->
+                                        <div class="p-1 rounded mb-2" style="background-color: #f9fafa;">
+                                            <span class="inline-block px-2 py-0.5 text-xs rounded-full">
+                                                {{ $usulan->indikator->nomor }} - {{ $usulan->indikator->nama }}
+                                            </span>
+                                        </div>
+
+                                        <!-- Delete Button -->
+                                        <div class="flex justify-end pt-2 border-t" style="border-color: #BFBFBF">
+                                            <form action="{{ route('usulan.destroy', $usulan->id) }}" method="POST"
+                                                onsubmit="return confirm('Yakin ingin menghapus usulan ini?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="px-4 py-1.5 rounded-xl text-xs transition text-white font-medium"
+                                                    style="background-color: #C00000">
+                                                    Hapus
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     @endif

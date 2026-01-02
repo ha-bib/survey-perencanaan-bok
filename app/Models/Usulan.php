@@ -15,21 +15,13 @@ class Usulan extends Model
         'responden_id',
         'indikator_id',
         'tingkat_bok',
-        'saran_kegiatan',
+        'rincian_menu',
         'detail_kegiatan',
-        'keriteria_penerima_bok',
-        'volume',
-        'volume_satuan',
-        'frekuensi_tahun',
-        'output',
-        'output_satuan',
-        'anggaran'
+        'sasaran_rincian_menu',
     ];
 
     protected $casts = [
-        'volume' => 'integer',
-        'frekuensi_tahun' => 'integer',
-        'anggaran' => 'integer'
+        
     ];
 
     public function responden()
@@ -40,5 +32,10 @@ class Usulan extends Model
     public function indikator()
     {
         return $this->belongsTo(Indikator::class, 'indikator_id');
+    }
+
+    public function reactions()
+    {
+        return $this->hasMany(UsulanReaction::class, 'usulan_id');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Usulan;
 use App\Models\Indikator;
 use App\Models\Responden;
+use App\Models\UsulanReaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -44,13 +45,9 @@ class UsulanController extends Controller
         $validator = Validator::make($request->all(), [
             'indikator' => 'required|exists:indikators,id',
             'tingkat_bok' => 'required|in:Provinsi,Kabupaten/Kota,Puskesmas',
-            'saran_kegiatan' => 'required|string',
+            'rincian_menu' => 'required|string',
             'detail_kegiatan' => 'required|string',
-            'keriteria_penerima_bok' => 'required|string',
-            'volume' => 'required|integer|min:1',
-            'satuan' => 'required|string|max:50',
-            'frekuensi_tahun' => 'required|integer|min:1',
-            'anggaran' => 'required|numeric|min:0',
+            'sasaran_rincian_menu' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -70,15 +67,9 @@ class UsulanController extends Controller
             'responden_id' => $respondenId,
             'indikator_id' => $validated->indikator,
             'tingkat_bok' => $validated->tingkat_bok,
-            'saran_kegiatan' => $validated->saran_kegiatan,
+            'rincian_menu' => $validated->rincian_menu,
             'detail_kegiatan' => $validated->detail_kegiatan,
-            'keriteria_penerima_bok' => $validated->keriteria_penerima_bok,
-            'volume' => $validated->volume,
-            'volume_satuan' => $validated->satuan,
-            'frekuensi_tahun' => $validated->frekuensi_tahun,
-            'anggaran' => $validated->anggaran,
-            'output' => $validated->volume * $validated->frekuensi_tahun,
-            'output_satuan' => $validated->satuan,
+            'sasaran_rincian_menu' => $validated->sasaran_rincian_menu,
         ]);
 
         return redirect()->route('usulan.index')->with('success', 'Usulan berhasil ditambahkan');
@@ -89,7 +80,8 @@ class UsulanController extends Controller
         $usulan = Usulan::findOrFail($id);
         $respondenId = session('responden_id');
 
-        if ($usulan->responden_id != $respondenId) {
+        // SECURITY: Use strict comparison to prevent type coercion bypass
+        if ((int)$usulan->responden_id !== (int)$respondenId) {
             return redirect()->route('usulan.index')->with('error', 'Tidak memiliki akses');
         }
 
@@ -112,33 +104,91 @@ class UsulanController extends Controller
 
     public function rekap(Request $request)
     {
-        $query = Usulan::with(['responden', 'indikator']);
+        $usulanList = Usulan::with(['responden', 'indikator', 'reactions'])
+            ->withCount([
+                'reactions as likes_count' => function ($q) {
+                    $q->where('reaction', 'like');
+                },
+                'reactions as dislikes_count' => function ($q) {
+                    $q->where('reaction', 'dislike');
+                },
+            ])
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        // Filter
-        if ($request->filled('tingkat')) {
-            $query->where('tingkat', $request->tingkat);
-        }
-
-        if ($request->filled('indikator_id')) {
-            $query->where('indikator_id', $request->indikator_id);
-        }
-
-        if ($request->filled('nama_responden')) {
-            $query->whereHas('responden', function ($q) use ($request) {
-                $q->where('nama', 'like', '%' . $request->nama_responden . '%');
-            });
-        }
-
-        if ($request->filled('instansi')) {
-            $query->whereHas('responden', function ($q) use ($request) {
-                $q->where('instansi', 'like', '%' . $request->instansi . '%');
-            });
-        }
-
-        $usulanList = $query->orderBy('created_at', 'desc')->paginate(20);
         $indikators = Indikator::all();
+        
+        // Convert to JSON-friendly array
+        $usulanData = $usulanList->map(function ($usulan) {
+            return [
+                'id' => $usulan->id,
+                'rincian_menu' => $usulan->rincian_menu,
+                'detail_kegiatan' => $usulan->detail_kegiatan,
+                'sasaran_rincian_menu' => $usulan->sasaran_rincian_menu,
+                'tingkat_bok' => $usulan->tingkat_bok,
+                'likes_count' => $usulan->likes_count,
+                'dislikes_count' => $usulan->dislikes_count,
+                'created_at' => $usulan->created_at->format('d/m/Y H:i'),
+                'created_at_iso' => $usulan->created_at->toIso8601String(),
+                'responden' => [
+                    'nama' => $usulan->responden->nama,
+                    'instansi' => $usulan->responden->instansi,
+                    'jabatan' => $usulan->responden->jabatan,
+                    'id' => $usulan->responden->id,
+                ],
+                'indikator' => [
+                    'nomor' => $usulan->indikator->nomor,
+                    'nama' => $usulan->indikator->nama,
+                    'tingkat' => $usulan->indikator->tingkat,
+                    'id' => $usulan->indikator->id,
+                ],
+            ];
+        });
 
-        return view('usulan.rekap', compact('usulanList', 'indikators'));
+        return view('usulan.rekap', [
+            'usulanJson' => json_encode($usulanData),
+            'indikators' => $indikators,
+            'totalUsulan' => $usulanList->count(),
+            'totalLikes' => $usulanList->sum('likes_count'),
+        ]);
+    }
+
+    public function react(Request $request, $id)
+    {
+        $request->validate([
+            'reaction' => 'required|in:like,dislike',
+        ]);
+
+        $respondenId = session('responden_id');
+        // SECURITY: Must be logged in (filled survey form)
+        if (!$respondenId) {
+            return response()->json(['message' => 'Harus mengisi survey untuk meng-like/dislike'], 403);
+        }
+
+        $usulan = Usulan::findOrFail($id);
+
+        // SECURITY: Cannot like/dislike own usulan
+        if ((int)$usulan->responden_id === (int)$respondenId) {
+            return response()->json(['message' => 'Tidak bisa like/dislike usulan sendiri'], 403);
+        }
+
+        UsulanReaction::updateOrCreate(
+            [
+                'usulan_id' => $usulan->id,
+                'responden_id' => $respondenId,
+            ],
+            [
+                'reaction' => $request->reaction,
+            ]
+        );
+
+        $likes = $usulan->reactions()->where('reaction', 'like')->count();
+        $dislikes = $usulan->reactions()->where('reaction', 'dislike')->count();
+
+        return response()->json([
+            'likes' => $likes,
+            'dislikes' => $dislikes,
+        ]);
     }
 
     public function indikator(Request $request)
