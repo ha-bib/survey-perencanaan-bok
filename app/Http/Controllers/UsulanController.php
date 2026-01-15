@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Usulan;
 use App\Models\Indikator;
 use App\Models\Responden;
-use App\Models\UsulanReaction;
 use Illuminate\Http\Request;
+use App\Exports\UsulanExport;
+use App\Models\UsulanReaction;
 use Illuminate\Support\Facades\Validator;
 
 class UsulanController extends Controller
@@ -44,11 +45,11 @@ class UsulanController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'indikator' => 'required|exists:indikators,id',
-            'tingkat_bok' => 'required|in:Provinsi,Kabupaten/Kota,Puskesmas',
-            'kategori_usulan' => 'required|in:' . implode(',', Usulan::KATEGORI_USULAN),
-            'rincian_menu' => 'required|string|max:255',
+            'level_kegiatan' => 'required|in:Provinsi,Kabupaten/Kota,Puskesmas',
+            'kategori_kegiatan' => 'required|in:' . implode(',', Usulan::kategori_kegiatan),
+            'nama_kegiatan' => 'required|string|max:255',
             'detail_kegiatan' => 'required|string|max:5000',
-            'sasaran_rincian_menu' => 'required|string|max:5000',
+            'sasaran_kegiatan' => 'required|string|max:5000',
         ]);
 
         if ($validator->fails()) {
@@ -67,11 +68,11 @@ class UsulanController extends Controller
         Usulan::create([
             'responden_id' => $respondenId,
             'indikator_id' => $validated->indikator,
-            'tingkat_bok' => $validated->tingkat_bok,
-            'kategori_usulan' => $validated->kategori_usulan,
-            'rincian_menu' => $validated->rincian_menu,
+            'level_kegiatan' => $validated->level_kegiatan,
+            'kategori_kegiatan' => $validated->kategori_kegiatan,
+            'nama_kegiatan' => $validated->nama_kegiatan,
             'detail_kegiatan' => $validated->detail_kegiatan,
-            'sasaran_rincian_menu' => $validated->sasaran_rincian_menu,
+            'sasaran_kegiatan' => $validated->sasaran_kegiatan,
         ]);
 
         return redirect()->route('usulan.index')->with('success', 'Usulan berhasil ditambahkan');
@@ -119,16 +120,16 @@ class UsulanController extends Controller
             ->get();
 
         $indikators = Indikator::all();
-        
+
         // Convert to JSON-friendly array
         $usulanData = $usulanList->map(function ($usulan) {
             return [
                 'id' => $usulan->id,
-                'rincian_menu' => $usulan->rincian_menu,
-                'kategori_usulan' => $usulan->kategori_usulan,
+                'nama_kegiatan' => $usulan->nama_kegiatan,
+                'kategori_kegiatan' => $usulan->kategori_kegiatan,
                 'detail_kegiatan' => $usulan->detail_kegiatan,
-                'sasaran_rincian_menu' => $usulan->sasaran_rincian_menu,
-                'tingkat_bok' => $usulan->tingkat_bok,
+                'sasaran_kegiatan' => $usulan->sasaran_kegiatan,
+                'level_kegiatan' => $usulan->level_kegiatan,
                 'likes_count' => $usulan->likes_count,
                 'dislikes_count' => $usulan->dislikes_count,
                 'created_at' => $usulan->created_at->format('d/m/Y H:i'),
@@ -231,5 +232,10 @@ class UsulanController extends Controller
             ->paginate(20);
 
         return view('usulan.indikator', compact('indikators'));
+    }
+
+    public function exportUsulan()
+    {
+        return (new UsulanExport())->download("SURVEY_BOK_" . now()->format('Y-m-d_H-i') . ".xlsx");
     }
 }

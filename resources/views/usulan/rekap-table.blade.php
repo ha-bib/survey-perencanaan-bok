@@ -176,13 +176,13 @@
                                     </span>
                                 </td>
                                 <td class="px-4 py-3">
-                                    <span class="inline-block px-2 py-1 text-xs rounded-full {{ $usulan->tingkat_bok == 'Provinsi' ? 'badge-provinsi' : ($usulan->tingkat_bok == 'Kabupaten/Kota' ? 'badge-kabkota' : 'badge-puskesmas') }}">
-                                        {{ $usulan->tingkat_bok }}
+                                    <span class="inline-block px-2 py-1 text-xs rounded-full {{ $usulan->level_kegiatan == 'Provinsi' ? 'badge-provinsi' : ($usulan->level_kegiatan == 'Kabupaten/Kota' ? 'badge-kabkota' : 'badge-puskesmas') }}">
+                                        {{ $usulan->level_kegiatan }}
                                     </span>
                                 </td>
                                 <td class="px-4 py-3 max-w-xs">
-                                    <div class="inline-block" title="{{ $usulan->rincian_menu }}" style="color: #007E78">
-                                        {{ Str::limit($usulan->rincian_menu, 50) }}
+                                    <div class="inline-block" title="{{ $usulan->nama_kegiatan }}" style="color: #007E78">
+                                        {{ Str::limit($usulan->nama_kegiatan, 50) }}
                                     </div>
                                 </td>
                                 <td class="px-4 py-3 max-w-xs">
@@ -191,8 +191,8 @@
                                     </div>
                                 </td>
                                 <td class="px-4 py-3 max-w-xs">
-                                    <div class="inline-block" title="{{ $usulan->sasaran_rincian_menu }}" style="color: #007E78">
-                                        {{ Str::limit($usulan->sasaran_rincian_menu, 50) }}
+                                    <div class="inline-block" title="{{ $usulan->sasaran_kegiatan }}" style="color: #007E78">
+                                        {{ Str::limit($usulan->sasaran_kegiatan, 50) }}
                                     </div>
                                 </td>
                                 <td class="px-4 py-3" style="color: #007E78">{{ $usulan->likes_count }}</td>

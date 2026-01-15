@@ -92,6 +92,14 @@
         .expanded .expand-icon {
             transform: rotate(180deg);
         }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #646400 0%, #939c00 100%);
+        }
+
+        .btn-secondary:hover {
+            background: #646400;
+        }
     </style>
 </head>
 
@@ -102,11 +110,17 @@
             <div class="header-gradient p-4 md:py-4 px-4 ps-6">
                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-0">
                     <h2 class="text-xl md:text-2xl font-bold text-white">Rekap Usulan Daerah</h2>
-                    <a href="{{ route('usulan.index') }}"
-                        class="flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 backdrop-blur text-white px-4 md:px-6 py-2 rounded-xl transition text-sm md:text-base border border-white border-opacity-30">
-                        <span class="mr-2">←</span>
-                        <span>Kembali ke Survey</span>
-                    </a>
+                    <div class="flex gap-3">
+                        <a href="{{ route('usulan.exportusulan') }}"
+                            class="flex items-center justify-center bg-white bg-opacity-50 hover:bg-opacity-30 backdrop-blur text-dark px-4 md:px-6 py-2 rounded-xl transition text-sm md:text-base border border-white border-opacity-30">
+                            Download
+                        </a>
+                        <a href="{{ route('usulan.index') }}"
+                            class="flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 backdrop-blur text-white px-4 md:px-6 py-2 rounded-xl transition text-sm md:text-base border border-white border-opacity-30">
+                            <span class="mr-2">←</span>
+                            <span>Kembali ke Survey</span>
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -189,8 +203,8 @@
 
                 <!-- Footer Info -->
                 <div class="text-center text-xs mt-3" style="color: #7F7F7F">
-                    Menampilkan <span id="visibleCount">0</span> dari <span
-                        id="totalCount">0</span> usulan · <span class="italic">Klik kartu untuk melihat detail</span>
+                    Menampilkan <span id="visibleCount">0</span> dari <span id="totalCount">0</span> usulan · <span class="italic">Klik kartu untuk
+                        melihat detail</span>
                 </div>
             </div>
         </div>
@@ -213,7 +227,7 @@
         const expandText = document.getElementById('expandText');
         const cardsContainer = document.getElementById('cardsContainer');
         const noResults = document.getElementById('noResults');
-        
+
         let allExpanded = false;
 
         // Helper: Get badge class
@@ -231,7 +245,7 @@
         function createCard(usulan) {
             return `
                 <div class="usulan-card bg-white rounded-lg border p-3" style="border-color: #BFBFBF"
-                    data-tingkat="${usulan.tingkat_bok}" data-indikator="${usulan.indikator.id}"
+                    data-tingkat="${usulan.level_kegiatan}" data-indikator="${usulan.indikator.id}"
                     data-id="${usulan.id}" onclick="toggleCard(this)">
 
                     <!-- Header -->
@@ -241,8 +255,8 @@
                             <p class="text-xs truncate" style="color: #007E78">${usulan.responden.instansi} · ${usulan.responden.jabatan}</p>
                         </div>
                         <div class="flex gap-1 flex-shrink-0 items-center">
-                            <span class="inline-block px-2 py-0.5 text-xs font-semibold rounded-full ${getBadgeClass(usulan.tingkat_bok)}">
-                                ${getTingkatLabel(usulan.tingkat_bok)}
+                            <span class="inline-block px-2 py-0.5 text-xs font-semibold rounded-full ${getBadgeClass(usulan.level_kegiatan)}">
+                                ${getTingkatLabel(usulan.level_kegiatan)}
                             </span>
                             <svg class="expand-icon w-4 h-4" style="color: #007E78" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -252,8 +266,8 @@
 
                     <!-- Rincian Menu -->
                     <div class="mb-2 py-2 px-1 rounded" style="background-color: #f8f9fa">
-                        <p class="text-xs font-medium truncate" style="color: #007E78" title="${usulan.rincian_menu}">
-                            ${usulan.rincian_menu.substring(0, 80)}
+                        <p class="text-xs font-medium truncate" style="color: #007E78" title="${usulan.nama_kegiatan}">
+                            ${usulan.nama_kegiatan.substring(0, 80)}
                         </p>
                     </div>
 
@@ -266,7 +280,7 @@
                             </div>
                             <div>
                                 <span class="font-medium" style="color: #7F7F7F">Sasaran Rincian Menu</span><br>
-                                <span style="color: #005050">${usulan.sasaran_rincian_menu}</span>
+                                <span style="color: #005050">${usulan.sasaran_kegiatan}</span>
                             </div>
                         </div>
                     </div>
@@ -340,38 +354,42 @@
             const type = btn.getAttribute('data-type');
 
             fetch(`{{ url('/usulan') }}/${usulanId}/react`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({ reaction: type })
-            })
-            .then(r => {
-                if (!r.ok) {
-                    return r.json().then(data => { throw new Error(data.message || 'Error'); });
-                }
-                return r.json();
-            })
-            .then(data => {
-                const card = btn.closest('.usulan-card');
-                const likeCount = card.querySelector('.like-count');
-                const dislikeCount = card.querySelector('.dislike-count');
-                likeCount.textContent = data.likes;
-                dislikeCount.textContent = data.dislikes;
-                
-                // Update usulan data
-                const idx = usulanData.findIndex(u => u.id == usulanId);
-                if (idx >= 0) {
-                    usulanData[idx].likes_count = data.likes;
-                    usulanData[idx].dislikes_count = data.dislikes;
-                }
-                
-                // Update total likes
-                let totalLikes = usulanData.reduce((sum, u) => sum + u.likes_count, 0);
-                document.getElementById('totalLikes').textContent = totalLikes;
-            })
-            .catch(err => alert(err.message || 'Terjadi kesalahan, coba lagi.'));
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        reaction: type
+                    })
+                })
+                .then(r => {
+                    if (!r.ok) {
+                        return r.json().then(data => {
+                            throw new Error(data.message || 'Error');
+                        });
+                    }
+                    return r.json();
+                })
+                .then(data => {
+                    const card = btn.closest('.usulan-card');
+                    const likeCount = card.querySelector('.like-count');
+                    const dislikeCount = card.querySelector('.dislike-count');
+                    likeCount.textContent = data.likes;
+                    dislikeCount.textContent = data.dislikes;
+
+                    // Update usulan data
+                    const idx = usulanData.findIndex(u => u.id == usulanId);
+                    if (idx >= 0) {
+                        usulanData[idx].likes_count = data.likes;
+                        usulanData[idx].dislikes_count = data.dislikes;
+                    }
+
+                    // Update total likes
+                    let totalLikes = usulanData.reduce((sum, u) => sum + u.likes_count, 0);
+                    document.getElementById('totalLikes').textContent = totalLikes;
+                })
+                .catch(err => alert(err.message || 'Terjadi kesalahan, coba lagi.'));
         }
 
         // Filter & Sort
@@ -384,11 +402,11 @@
 
             // Filter
             filteredData = usulanData.filter(u => {
-                const matchTingkat = !tingkat || u.tingkat_bok === tingkat;
+                const matchTingkat = !tingkat || u.level_kegiatan === tingkat;
                 const matchIndikator = !indikator || u.indikator.id == indikator;
-                const matchKegiatan = !kegiatan || 
-                    (u.rincian_menu.toLowerCase().includes(kegiatan) || 
-                     u.detail_kegiatan.toLowerCase().includes(kegiatan));
+                const matchKegiatan = !kegiatan ||
+                    (u.nama_kegiatan.toLowerCase().includes(kegiatan) ||
+                        u.detail_kegiatan.toLowerCase().includes(kegiatan));
                 const matchInstansi = !instansi || u.responden.instansi.toLowerCase().includes(instansi);
                 return matchTingkat && matchIndikator && matchKegiatan && matchInstansi;
             });

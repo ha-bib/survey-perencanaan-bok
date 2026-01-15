@@ -188,7 +188,7 @@
                                 </div>
                                 <div class="md:col-span-2">
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Level Kegiatan *</label>
-                                    <select name="tingkat_bok" required class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
+                                    <select name="level_kegiatan" required class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
                                         style="border-color: #eeeeee">
                                         <option value="">-- Pilih level kegiatan --</option>
                                         <option value="Provinsi">Provinsi</option>
@@ -199,10 +199,10 @@
 
                                 <div class="md:col-span-2">
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Kategori Kegiatan *</label>
-                                    <select name="kategori_usulan" required class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
+                                    <select name="kategori_kegiatan" required class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
                                         style="border-color: #eeeeee">
                                         <option value="">-- Pilih kegiatan --</option>
-                                        @foreach (\App\Models\Usulan::KATEGORI_USULAN as $kategori)
+                                        @foreach (\App\Models\Usulan::kategori_kegiatan as $kategori)
                                             <option value="{{ $kategori }}">{{ $kategori }}</option>
                                         @endforeach
                                     </select>
@@ -210,7 +210,7 @@
 
                                 <div class="md:col-span-2">
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Nama Kegiatan *</label>
-                                    <textarea name="rincian_menu" required rows="2" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
+                                    <textarea name="nama_kegiatan" required rows="2" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
                                         placeholder="Rincian menu yang anda usulkan..." maxlength="255" style="border-color: #eeeeee"></textarea>
                                 </div>
 
@@ -222,7 +222,7 @@
 
                                 <div class="md:col-span-2">
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Sasaran Kegiatan *</label>
-                                    <textarea name="sasaran_rincian_menu" required rows="3" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
+                                    <textarea name="sasaran_kegiatan" required rows="3" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
                                         placeholder="Rincikan sasaran untuk kegiatan ini..." style="border-color: #eeeeee"></textarea>
                                 </div>
                             </div>
@@ -300,11 +300,11 @@
                                         <!-- Header -->
                                         <div class="flex items-start justify-between gap-2 mb-2">
                                             <div class="flex-1 min-w-0">
-                                                <p class="text-sm font-semibold truncate" style="color: #007E78">{{ $usulan->rincian_menu }}</p>
+                                                <p class="text-sm font-semibold truncate" style="color: #007E78">{{ $usulan->nama_kegiatan }}</p>
                                             </div>
                                             <span
-                                                class="inline-block px-2 py-0.5 text-xs font-semibold rounded-full flex-shrink-0 {{ $usulan->tingkat_bok == 'Provinsi' ? 'badge-provinsi' : ($usulan->tingkat_bok == 'Kabupaten/Kota' ? 'badge-kabkota' : 'badge-puskesmas') }}">
-                                                {{ $usulan->tingkat_bok == 'Kabupaten/Kota' ? 'Kab/Kota' : $usulan->tingkat_bok }}
+                                                class="inline-block px-2 py-0.5 text-xs font-semibold rounded-full flex-shrink-0 {{ $usulan->level_kegiatan == 'Provinsi' ? 'badge-provinsi' : ($usulan->level_kegiatan == 'Kabupaten/Kota' ? 'badge-kabkota' : 'badge-puskesmas') }}">
+                                                {{ $usulan->level_kegiatan == 'Kabupaten/Kota' ? 'Kab/Kota' : $usulan->level_kegiatan }}
                                             </span>
                                         </div>
 
@@ -313,7 +313,7 @@
                                             <div class="flex items-center justify-between">
                                                 <span class="font-medium" style="color: #7F7F7F">Kategori Usulan</span>
                                                 <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold"
-                                                    style="background-color: #edfffe; color: #005050">{{ $usulan->kategori_usulan ?? '-' }}</span>
+                                                    style="background-color: #edfffe; color: #005050">{{ $usulan->kategori_kegiatan ?? '-' }}</span>
                                             </div>
                                             <div>
                                                 <span class="font-medium" style="color: #7F7F7F">Detail Kegiatan</span><br>
@@ -321,7 +321,7 @@
                                             </div>
                                             <div>
                                                 <span class="font-medium" style="color: #7F7F7F">Sasaran Rincian Menu</span><br>
-                                                <span style="color: #005050">{{ $usulan->sasaran_rincian_menu }}</span>
+                                                <span style="color: #005050">{{ $usulan->sasaran_kegiatan }}</span>
                                             </div>
                                         </div>
 

@@ -5,8 +5,8 @@
 ### 1. Database Schema Simplified
 - **Migration 1**: `2025_12_23_000001_update_usulans_simplify_and_rename_columns.php`
   - Removed columns: `volume`, `volume_satuan`, `frekuensi_tahun`, `output`, `output_satuan`, `anggaran`
-  - Renamed: `saran_kegiatan` → `rincian_menu`
-  - Renamed: `keriteria_penerima_bok` → `sasaran_rincian_menu`
+  - Renamed: `saran_kegiatan` → `nama_kegiatan`
+  - Renamed: `keriteria_penerima_bok` → `sasaran_kegiatan`
 
 - **Migration 2**: `2025_12_23_000002_create_usulan_reactions_table.php`
   - New table: `usulan_reactions` with fields:
@@ -47,8 +47,8 @@ Route::post('/usulan/{id}/react', [UsulanController::class, 'react'])->name('usu
 ### 5. Views Updated
 
 **form.blade.php**
-- Input field renamed: `saran_kegiatan` → `rincian_menu`
-- Input field renamed: `keriteria_penerima_bok` → `sasaran_rincian_menu`
+- Input field renamed: `saran_kegiatan` → `nama_kegiatan`
+- Input field renamed: `keriteria_penerima_bok` → `sasaran_kegiatan`
 - Removed inputs: volume, satuan, frekuensi_tahun, anggaran
 - Table updated to show only relevant columns
 

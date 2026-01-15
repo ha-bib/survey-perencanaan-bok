@@ -12,17 +12,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('responden_id')->constrained('respondens')->onDelete('cascade');
             $table->foreignId('indikator_id')->constrained('indikators')->onDelete('cascade');
-            $table->string('tingkat_bok', 100)->comment('Provinsi, Kabupaten/Kota, Puskesmas');
-            $table->string('kategori_usulan', 100)->comment('Pertemuan/Rapat, Kunjungan, Monev, Belanja, Pelatihan, Lainnya');
-            $table->text('saran_kegiatan');
+            $table->string('level_kegiatan', 100)->comment('Provinsi, Kabupaten/Kota, Puskesmas');
+            $table->string('kategori_kegiatan', 100)->comment('Pertemuan/Rapat, Kunjungan, Monev, Belanja, Pelatihan, Lainnya');
+            $table->text('nama_kegiatan');
             $table->text('detail_kegiatan');
-            $table->text('keriteria_penerima_bok');
-            $table->integer('volume');
-            $table->string('volume_satuan', 50);
-            $table->integer('frekuensi_tahun');
-            $table->integer('output');
-            $table->string('output_satuan', 50);
-            $table->bigInteger('anggaran');
+            $table->text('sasaran_kegiatan');
             $table->timestamps();
         });
     }
