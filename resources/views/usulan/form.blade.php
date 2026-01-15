@@ -174,6 +174,17 @@
                                 </div>
 
                                 <div class="md:col-span-2">
+                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Kategori Usulan *</label>
+                                    <select name="kategori_usulan" required class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
+                                        style="border-color: #eeeeee">
+                                        <option value="">-- Pilih Kategori --</option>
+                                        @foreach (\App\Models\Usulan::KATEGORI_USULAN as $kategori)
+                                            <option value="{{ $kategori }}">{{ $kategori }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="md:col-span-2">
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Rincian Menu *</label>
                                     <textarea name="rincian_menu" required rows="2" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" placeholder="Rincian menu yang anda usulkan..."
                                         style="border-color: #eeeeee"></textarea>
@@ -229,6 +240,10 @@
 
                                         <!-- Details -->
                                         <div class="space-y-1.5 mb-2 text-xs border-t pt-2" style="border-color: #BFBFBF">
+                                            <div class="flex items-center justify-between">
+                                                <span class="font-medium" style="color: #7F7F7F">Kategori Usulan</span>
+                                                <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold" style="background-color: #edfffe; color: #005050">{{ $usulan->kategori_usulan ?? '-' }}</span>
+                                            </div>
                                             <div>
                                                 <span class="font-medium" style="color: #7F7F7F">Detail Kegiatan</span><br>
                                                 <span style="color: #005050">{{ $usulan->detail_kegiatan }}</span>

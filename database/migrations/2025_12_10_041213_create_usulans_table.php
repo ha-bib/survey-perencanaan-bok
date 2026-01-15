@@ -13,6 +13,7 @@ return new class extends Migration
             $table->foreignId('responden_id')->constrained('respondens')->onDelete('cascade');
             $table->foreignId('indikator_id')->constrained('indikators')->onDelete('cascade');
             $table->string('tingkat_bok', 100)->comment('Provinsi, Kabupaten/Kota, Puskesmas');
+            $table->string('kategori_usulan', 100)->comment('Pertemuan/Rapat, Kunjungan, Monev, Belanja, Pelatihan, Lainnya');
             $table->text('saran_kegiatan');
             $table->text('detail_kegiatan');
             $table->text('keriteria_penerima_bok');

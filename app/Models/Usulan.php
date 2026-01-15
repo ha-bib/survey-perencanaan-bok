@@ -11,10 +11,21 @@ class Usulan extends Model
 
     protected $table = 'usulans';
 
+    // Allowed kategori usulan values for validation/UI use
+    public const KATEGORI_USULAN = [
+        'Pertemuan / Rapat',
+        'Kunjungan Lapangan & Sasaran',
+        'Monitoring & Evaluasi',
+        'Belanja Barang',
+        'Pelatihan / Peningkatan Kapasitas',
+        'Lainnya',
+    ];
+
     protected $fillable = [
         'responden_id',
         'indikator_id',
         'tingkat_bok',
+        'kategori_usulan',
         'rincian_menu',
         'detail_kegiatan',
         'sasaran_rincian_menu',

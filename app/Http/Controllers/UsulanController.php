@@ -45,6 +45,7 @@ class UsulanController extends Controller
         $validator = Validator::make($request->all(), [
             'indikator' => 'required|exists:indikators,id',
             'tingkat_bok' => 'required|in:Provinsi,Kabupaten/Kota,Puskesmas',
+            'kategori_usulan' => 'required|in:' . implode(',', Usulan::KATEGORI_USULAN),
             'rincian_menu' => 'required|string',
             'detail_kegiatan' => 'required|string',
             'sasaran_rincian_menu' => 'required|string',
@@ -67,6 +68,7 @@ class UsulanController extends Controller
             'responden_id' => $respondenId,
             'indikator_id' => $validated->indikator,
             'tingkat_bok' => $validated->tingkat_bok,
+            'kategori_usulan' => $validated->kategori_usulan,
             'rincian_menu' => $validated->rincian_menu,
             'detail_kegiatan' => $validated->detail_kegiatan,
             'sasaran_rincian_menu' => $validated->sasaran_rincian_menu,
@@ -123,6 +125,7 @@ class UsulanController extends Controller
             return [
                 'id' => $usulan->id,
                 'rincian_menu' => $usulan->rincian_menu,
+                'kategori_usulan' => $usulan->kategori_usulan,
                 'detail_kegiatan' => $usulan->detail_kegiatan,
                 'sasaran_rincian_menu' => $usulan->sasaran_rincian_menu,
                 'tingkat_bok' => $usulan->tingkat_bok,

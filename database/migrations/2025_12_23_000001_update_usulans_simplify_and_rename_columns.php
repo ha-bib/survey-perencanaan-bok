@@ -16,6 +16,10 @@ return new class extends Migration
                 $table->renameColumn('keriteria_penerima_bok', 'sasaran_rincian_menu');
             }
 
+            if (!Schema::hasColumn('usulans', 'kategori_usulan')) {
+                $table->string('kategori_usulan', 100)->nullable();
+            }
+
             $dropColumns = [];
             foreach (['volume', 'volume_satuan', 'frekuensi_tahun', 'output', 'output_satuan', 'anggaran'] as $col) {
                 if (Schema::hasColumn('usulans', $col)) {
@@ -55,6 +59,10 @@ return new class extends Migration
             }
             if (!Schema::hasColumn('usulans', 'anggaran')) {
                 $table->bigInteger('anggaran')->nullable();
+            }
+
+            if (Schema::hasColumn('usulans', 'kategori_usulan')) {
+                $table->dropColumn('kategori_usulan');
             }
         });
     }
