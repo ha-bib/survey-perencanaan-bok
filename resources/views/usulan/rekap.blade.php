@@ -116,7 +116,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-8 gap-2">
                         <div>
                             <select id="filterTingkat" class="w-full px-2 py-1.5 border rounded-lg text-xs" style="border-color: #BFBFBF">
-                                <option value="">Semua Tingkat</option>
+                                <option value="">Semua Level</option>
                                 <option value="Provinsi">Provinsi</option>
                                 <option value="Kabupaten/Kota">Kabupaten/Kota</option>
                                 <option value="Puskesmas">Puskesmas</option>

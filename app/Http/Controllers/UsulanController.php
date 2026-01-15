@@ -46,9 +46,9 @@ class UsulanController extends Controller
             'indikator' => 'required|exists:indikators,id',
             'tingkat_bok' => 'required|in:Provinsi,Kabupaten/Kota,Puskesmas',
             'kategori_usulan' => 'required|in:' . implode(',', Usulan::KATEGORI_USULAN),
-            'rincian_menu' => 'required|string',
-            'detail_kegiatan' => 'required|string',
-            'sasaran_rincian_menu' => 'required|string',
+            'rincian_menu' => 'required|string|max:255',
+            'detail_kegiatan' => 'required|string|max:5000',
+            'sasaran_rincian_menu' => 'required|string|max:5000',
         ]);
 
         if ($validator->fails()) {
@@ -226,7 +226,7 @@ class UsulanController extends Controller
             }
         }
 
-        $indikators = $query->where('is_display', true)
+        $indikators = $query->withCount('usulans')->where('is_display', true)
             ->orderBy('nomor')
             ->paginate(20);
 

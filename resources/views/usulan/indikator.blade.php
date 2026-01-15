@@ -151,6 +151,7 @@
                                 <th class="px-3 py-3 text-left font-semibold" style="color: #005050">Tingkat</th>
                                 <th class="px-3 py-3 text-left font-semibold" style="color: #005050">Nama Indikator</th>
                                 <th class="px-3 py-3 text-left font-semibold" style="color: #005050">Unit/Tim Kerja</th>
+                                <th class="px-3 py-3 text-left font-semibold" style="color: #005050">Jumlah Usulan</th>
                             </tr>
                         </thead>
                         <tbody id="tableBody" class="bg-white">
@@ -173,6 +174,9 @@
                                     </td>
                                     <td class="px-3 py-2">
                                         <span style="color: #007E78">{{ $indikator->unit_timker ?: '-' }}</span>
+                                    </td>
+                                    <td class="px-3 py-2 text-center">
+                                        <span class="font-semibold" style="color: #005050">{{ $indikator->usulans_count }}</span>
                                     </td>
                                 </tr>
                             @endforeach

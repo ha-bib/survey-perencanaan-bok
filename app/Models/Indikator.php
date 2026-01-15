@@ -29,7 +29,7 @@ class Indikator extends Model
         'is_display' => 'boolean',
     ];
 
-    public function usulan()
+    public function usulans()
     {
         return $this->hasMany(Usulan::class, 'indikator_id');
     }

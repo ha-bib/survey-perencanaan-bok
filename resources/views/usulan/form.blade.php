@@ -7,6 +7,7 @@
     <title>Form Survey Perencanaan BOK 2027</title>
     <link rel="icon" href="{{ asset('favicon.png') }}" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
         :root {
             --dark-teal: #005050;
@@ -41,7 +42,7 @@
         }
 
         .btn-secondary {
-            background: linear-gradient(135deg, #646400 0%, #D2DE00 100%);
+            background: linear-gradient(135deg, #646400 0%, #939c00 100%);
         }
 
         .btn-secondary:hover {
@@ -58,6 +59,23 @@
 
         .header-gradient {
             background: linear-gradient(90deg, #005858 0%, #00B3AC 100%);
+        }
+
+        .select2-selection.select2-selection--single {
+            padding: 5px;
+            height: 40px;
+            border-radius: 0.75rem;
+            border-color: #eeeeee;
+            border-width: 2px;
+        }
+
+        .select2-container--default .select2-results__option--highlighted {
+            background-color: #007a77 !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__placeholder {
+            color: #2c2c2c !important;
+            font-size: 0.875rem;
         }
     </style>
 </head>
@@ -103,7 +121,7 @@
                 @endif
 
                 @if (session('success'))
-                    <div class="border-2 border-[#00B3AC] text-sm px-4 py-3 rounded-xl mb-4" style="background-color: #C7EDEB; color: #005050">
+                    <div class="border-2 border-[#00B3AC] text-sm px-4 py-3 rounded-xl mb-4" style="background-color: #005c57; color: #eefdfd">
                         ✓ {{ session('success') }}
                     </div>
                 @endif
@@ -146,27 +164,33 @@
                 @else
                     <!-- Form Usulan -->
                     <div class="border-2 accent-border rounded-xl p-4 md:p-6 mb-0 bg-gradient-to-r from-[#edfffe] to-[#edfffe]">
-                        <h2 class="text-lg md:text-xl font-semibold mb-4" style="color: #005050">Tambah Usulan</h2>
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-lg md:text-xl font-semibold" style="color: #005050">Tambah Usulan</h2>
+                            <button type="button" id="buttonExample" class="btn-secondary text-white px-4 py-2 rounded-xl transition font-semibold text-sm">
+                                Contoh
+                            </button>
+                        </div>
 
                         <form action="{{ route('usulan.store') }}" method="POST" id="usulanForm">
                             @csrf
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="md:col-span-2">
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Indikator *</label>
-                                    <select name="indikator" required class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
+                                    <select name="indikator" required
+                                        class="indikator-select w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
                                         style="border-color: #eeeeee">
-                                        <option value="">-- Pilih Indikator --</option>
+                                        <option value="">-- Pilih indikator --</option>
                                         @foreach ($indikators as $ind)
                                             <option value="{{ $ind->id }}">{{ $ind->nomor }} - {{ $ind->nama }} ({{ $ind->tingkat }})
                                             </option>
                                         @endforeach
                                     </select>
-                                </div> 
+                                </div>
                                 <div class="md:col-span-2">
-                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Tingkat *</label>
+                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Level Kegiatan *</label>
                                     <select name="tingkat_bok" required class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
                                         style="border-color: #eeeeee">
-                                        <option value="">-- Pilih Tingkat --</option>
+                                        <option value="">-- Pilih level kegiatan --</option>
                                         <option value="Provinsi">Provinsi</option>
                                         <option value="Kabupaten/Kota">Kabupaten/Kota</option>
                                         <option value="Puskesmas">Puskesmas</option>
@@ -174,10 +198,10 @@
                                 </div>
 
                                 <div class="md:col-span-2">
-                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Kategori Usulan *</label>
+                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Kategori Kegiatan *</label>
                                     <select name="kategori_usulan" required class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
                                         style="border-color: #eeeeee">
-                                        <option value="">-- Pilih Kategori --</option>
+                                        <option value="">-- Pilih kegiatan --</option>
                                         @foreach (\App\Models\Usulan::KATEGORI_USULAN as $kategori)
                                             <option value="{{ $kategori }}">{{ $kategori }}</option>
                                         @endforeach
@@ -185,22 +209,22 @@
                                 </div>
 
                                 <div class="md:col-span-2">
-                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Rincian Menu *</label>
-                                    <textarea name="rincian_menu" required rows="2" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" placeholder="Rincian menu yang anda usulkan..."
-                                        style="border-color: #eeeeee"></textarea>
+                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Nama Kegiatan *</label>
+                                    <textarea name="rincian_menu" required rows="2" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
+                                        placeholder="Rincian menu yang anda usulkan..." maxlength="255" style="border-color: #eeeeee"></textarea>
                                 </div>
 
                                 <div class="md:col-span-2">
                                     <label class="block text-sm font-medium mb-2" style="color: #005050">Detail Kegiatan *</label>
-                                    <textarea name="detail_kegiatan" required rows="3" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" placeholder="Jelaskan kegiatan yang anda usulkan..."
-                                        style="border-color: #eeeeee"></textarea>
+                                    <textarea name="detail_kegiatan" required rows="3" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
+                                        placeholder="Jelaskan kegiatan yang anda usulkan..." style="border-color: #eeeeee"></textarea>
                                 </div>
 
                                 <div class="md:col-span-2">
-                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Sasaran Rincian Menu *</label>
-                                    <textarea name="sasaran_rincian_menu" required rows="3" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm" placeholder="Rincikan sasaran untuk rincian menu ini..."
-                                        style="border-color: #eeeeee"></textarea>
-                                </div> 
+                                    <label class="block text-sm font-medium mb-2" style="color: #005050">Sasaran Kegiatan *</label>
+                                    <textarea name="sasaran_rincian_menu" required rows="3" class="w-full px-3 py-2 border-2 rounded-xl focus:outline-none text-sm"
+                                        placeholder="Rincikan sasaran untuk kegiatan ini..." style="border-color: #eeeeee"></textarea>
+                                </div>
                             </div>
 
                             <button type="submit"
@@ -210,9 +234,54 @@
                         </form>
                     </div>
 
+                    <!-- Example Modal -->
+                    <div id="exampleModal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
+                        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+                        <div class="relative max-w-3xl mx-auto mt-10 bg-white rounded-2xl shadow-2xl overflow-hidden">
+                            <div class="flex items-center justify-between px-5 py-4 border-b" style="border-color: #eeeeee">
+                                <h3 class="text-lg font-semibold" style="color: #005050">Contoh Isian Usulan</h3>
+                                <button type="button" id="closeExample" class="text-sm font-semibold px-3 py-1 rounded-lg" style="color: #C00000; background: #ffebee">Tutup</button>
+                            </div>
+                            <div class="p-5 bg-gradient-to-r from-[#edfffe] to-[#edfffe]">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="md:col-span-2">
+                                        <label class="block text-sm font-medium mb-1" style="color: #005050">Indikator</label>
+                                        <select disabled class="w-full px-3 py-2 border-2 rounded-xl text-sm" style="border-color: #eeeeee">
+                                            <option selected>1 - Penguatan Surveilans (Provinsi)</option>
+                                        </select>
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label class="block text-sm font-medium mb-1" style="color: #005050">Level Kegiatan</label>
+                                        <select disabled class="w-full px-3 py-2 border-2 rounded-xl text-sm" style="border-color: #eeeeee">
+                                            <option selected>Kabupaten/Kota</option>
+                                        </select>
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label class="block text-sm font-medium mb-1" style="color: #005050">Kategori Kegiatan</label>
+                                        <select disabled class="w-full px-3 py-2 border-2 rounded-xl text-sm" style="border-color: #eeeeee">
+                                            <option selected>Pertemuan / Rapat</option>
+                                        </select>
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label class="block text-sm font-medium mb-1" style="color: #005050">Nama Kegiatan</label>
+                                        <textarea readonly rows="2" class="w-full px-3 py-2 border-2 rounded-xl text-sm" style="border-color: #eeeeee">Rapat koordinasi lintas sektor pemantauan penyakit prioritas</textarea>
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label class="block text-sm font-medium mb-1" style="color: #005050">Detail Kegiatan</label>
+                                        <textarea readonly rows="3" class="w-full px-3 py-2 border-2 rounded-xl text-sm" style="border-color: #eeeeee">Pertemuan koordinasi triwulanan melibatkan dinas kesehatan, puskesmas, dan RS rujukan untuk membahas capaian surveilans, analisis gap, serta rencana tindak lanjut.</textarea>
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label class="block text-sm font-medium mb-1" style="color: #005050">Sasaran Kegiatan</label>
+                                        <textarea readonly rows="3" class="w-full px-3 py-2 border-2 rounded-xl text-sm" style="border-color: #eeeeee">Minimal 30 peserta per pertemuan: pengelola surveilans kab/kota, penanggung jawab surveilans puskesmas, RS sentinel, serta lintas program terkait.</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Daftar Usulan -->
                     @if ($usulanList->count() > 0)
-                        <div class="border-2 rounded-xl p-4 md:p-6 bg-white" style="border-color: #eeeeee">
+                        <div class="border-2 rounded-xl p-4 md:p-6 bg-white mt-4" style="border-color: #eeeeee">
                             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
                                 <h2 class="text-lg md:text-xl font-semibold" style="color: #005050">Daftar Usulan Anda ({{ $usulanList->count() }})
                                 </h2>
@@ -233,7 +302,8 @@
                                             <div class="flex-1 min-w-0">
                                                 <p class="text-sm font-semibold truncate" style="color: #007E78">{{ $usulan->rincian_menu }}</p>
                                             </div>
-                                            <span class="inline-block px-2 py-0.5 text-xs font-semibold rounded-full flex-shrink-0 {{ $usulan->tingkat_bok == 'Provinsi' ? 'badge-provinsi' : ($usulan->tingkat_bok == 'Kabupaten/Kota' ? 'badge-kabkota' : 'badge-puskesmas') }}">
+                                            <span
+                                                class="inline-block px-2 py-0.5 text-xs font-semibold rounded-full flex-shrink-0 {{ $usulan->tingkat_bok == 'Provinsi' ? 'badge-provinsi' : ($usulan->tingkat_bok == 'Kabupaten/Kota' ? 'badge-kabkota' : 'badge-puskesmas') }}">
                                                 {{ $usulan->tingkat_bok == 'Kabupaten/Kota' ? 'Kab/Kota' : $usulan->tingkat_bok }}
                                             </span>
                                         </div>
@@ -242,7 +312,8 @@
                                         <div class="space-y-1.5 mb-2 text-xs border-t pt-2" style="border-color: #BFBFBF">
                                             <div class="flex items-center justify-between">
                                                 <span class="font-medium" style="color: #7F7F7F">Kategori Usulan</span>
-                                                <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold" style="background-color: #edfffe; color: #005050">{{ $usulan->kategori_usulan ?? '-' }}</span>
+                                                <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold"
+                                                    style="background-color: #edfffe; color: #005050">{{ $usulan->kategori_usulan ?? '-' }}</span>
                                             </div>
                                             <div>
                                                 <span class="font-medium" style="color: #7F7F7F">Detail Kegiatan</span><br>
@@ -287,5 +358,44 @@
         </div>
     </div>
 </body>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        $('.indikator-select').select2({
+            placeholder: '-- Pilih Indikator --',
+
+            width: '100%',
+            allowClear: true,
+        });
+
+        const modal = document.getElementById('exampleModal');
+        const openBtn = document.getElementById('buttonExample');
+        const closeBtn = document.getElementById('closeExample');
+
+        function openModal() {
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+        }
+
+        if (openBtn && modal) {
+            openBtn.addEventListener('click', openModal);
+        }
+
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeModal);
+        }
+
+        modal?.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    });
+</script>
 
 </html>
