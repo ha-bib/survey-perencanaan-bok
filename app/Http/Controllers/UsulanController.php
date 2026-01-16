@@ -8,18 +8,27 @@ use App\Models\Responden;
 use Illuminate\Http\Request;
 use App\Exports\UsulanExport;
 use App\Models\UsulanReaction;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 
 class UsulanController extends Controller
 {
     public function index()
     {
-        $indikators = Indikator::where('is_display', true)->get();
+        // Cache indikators for 1 hour (rarely changes)
+        $indikators = Cache::remember('indikators_display', 3600, function () {
+            return Indikator::select(['id', 'nomor', 'nama', 'tingkat'])
+                ->where('is_display', true)
+                ->orderBy('nomor')
+                ->get();
+        });
+
         $respondenId = session('responden_id');
         $usulanList = [];
 
         if ($respondenId) {
-            $usulanList = Usulan::with('indikator')
+            $usulanList = Usulan::select(['id', 'indikator_id', 'nama_kegiatan', 'kategori_kegiatan', 'level_kegiatan'])
+                ->with(['indikator:id,nomor,nama'])
                 ->where('responden_id', $respondenId)
                 ->get();
         }
@@ -107,7 +116,15 @@ class UsulanController extends Controller
 
     public function rekap(Request $request)
     {
-        $usulanList = Usulan::with(['responden', 'indikator', 'reactions'])
+        $usulanList = Usulan::select([
+                'id', 'responden_id', 'indikator_id', 'nama_kegiatan',
+                'kategori_kegiatan', 'detail_kegiatan', 'sasaran_kegiatan',
+                'level_kegiatan', 'created_at'
+            ])
+            ->with([
+                'responden:id,nama,instansi,jabatan',
+                'indikator:id,nomor,nama,tingkat'
+            ])
             ->withCount([
                 'reactions as likes_count' => function ($q) {
                     $q->where('reaction', 'like');
@@ -116,10 +133,13 @@ class UsulanController extends Controller
                     $q->where('reaction', 'dislike');
                 },
             ])
-            ->orderBy('created_at', 'desc')
+            ->latest('created_at')
             ->get();
 
-        $indikators = Indikator::all();
+        // Cache all indikators for rekap filters
+        $indikators = Cache::remember('indikators_all', 3600, function () {
+            return Indikator::select(['id', 'nomor', 'nama', 'tingkat'])->get();
+        });
 
         // Convert to JSON-friendly array
         $usulanData = $usulanList->map(function ($usulan) {
@@ -186,27 +206,32 @@ class UsulanController extends Controller
             ]
         );
 
-        $likes = $usulan->reactions()->where('reaction', 'like')->count();
-        $dislikes = $usulan->reactions()->where('reaction', 'dislike')->count();
+        // Single query to get both counts
+        $counts = UsulanReaction::where('usulan_id', $usulan->id)
+            ->selectRaw("SUM(reaction = 'like') as likes, SUM(reaction = 'dislike') as dislikes")
+            ->first();
 
         return response()->json([
-            'likes' => $likes,
-            'dislikes' => $dislikes,
+            'likes' => (int) $counts->likes,
+            'dislikes' => (int) $counts->dislikes,
         ]);
     }
 
     public function indikator(Request $request)
     {
-        $query = Indikator::query();
+        $query = Indikator::select([
+            'id', 'nomor', 'tingkat', 'nama', 'unit_timker',
+            'is_RENSTRA', 'is_RIBK', 'is_RPJMN'
+        ])->where('is_display', true);
 
         // Global Search
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('nomor', 'like', '%' . $search . '%')
-                    ->orWhere('nama', 'like', '%' . $search . '%')
-                    ->orWhere('tingkat', 'like', '%' . $search . '%')
-                    ->orWhere('unit_timker', 'like', '%' . $search . '%');
+                $q->where('nomor', 'like', "%{$search}%")
+                    ->orWhere('nama', 'like', "%{$search}%")
+                    ->orWhere('tingkat', 'like', "%{$search}%")
+                    ->orWhere('unit_timker', 'like', "%{$search}%");
             });
         }
 
@@ -218,13 +243,12 @@ class UsulanController extends Controller
         // Filter by RENSTRA/RIBK/RPJMN
         if ($request->filled('filter_type')) {
             $filterType = $request->filter_type;
-            if ($filterType === 'RENSTRA') {
-                $query->where('is_RENSTRA', true);
-            } elseif ($filterType === 'RIBK') {
-                $query->where('is_RIBK', true);
-            } elseif ($filterType === 'RPJMN') {
-                $query->where('is_RPJMN', true);
-            }
+            match ($filterType) {
+                'RENSTRA' => $query->where('is_RENSTRA', true),
+                'RIBK' => $query->where('is_RIBK', true),
+                'RPJMN' => $query->where('is_RPJMN', true),
+                default => null,
+            };
         }
 
         $indikators = $query->withCount('usulans')->where('is_display', true)

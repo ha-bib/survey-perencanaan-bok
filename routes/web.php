@@ -12,4 +12,4 @@ Route::post('/usulan/cancel', [UsulanController::class, 'cancel'])->name('usulan
 Route::get('/rekap', [UsulanController::class, 'rekap'])->name('usulan.rekap');
 Route::post('/usulan/{id}/react', [UsulanController::class, 'react'])->name('usulan.react');
 
-Route::get('/export-usulan', [UsulanController::class, 'exportUsulan'])->name('usulan.exportusulan')->middleware('throttle:5,1'); // rate limit of 5 requests per minute
+Route::get('/export-usulan', [UsulanController::class, 'exportUsulan'])->name('usulan.exportusulan')->middleware('throttle:1,15'); // rate limit of 1 request per 15 minutes

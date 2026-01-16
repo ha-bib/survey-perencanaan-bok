@@ -10,14 +10,19 @@ use Maatwebsite\Excel\Concerns\WithProperties;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 
-class UsulanExport implements WithColumnWidths, WithHeadings, WithColumnFormatting, WithProperties, FromQuery
+class UsulanExport implements WithColumnWidths, WithHeadings, WithColumnFormatting, WithProperties, FromQuery, WithChunkReading
 {
     use Exportable;
 
-    protected $from_date;
-    protected $to_date;
-
+    /**
+     * Chunk size for memory-efficient export
+     */
+    public function chunkSize(): int
+    {
+        return 500;
+    }
 
     public function query()
     {
