@@ -155,8 +155,12 @@
                                 class="w-full px-2 py-1.5 border rounded-lg text-xs" style="border-color: #BFBFBF">
                         </div>
                         <div>
-                            <input type="text" id="filterInstansi" placeholder="Instansi..." class="w-full px-2 py-1.5 border rounded-lg text-xs"
-                                style="border-color: #BFBFBF">
+                            <select id="filterKategori" class="w-full px-2 py-1.5 border rounded-lg text-xs" style="border-color: #BFBFBF">
+                                <option value="">Semua Kategori</option>
+                                @foreach (\App\Models\Usulan::kategori_kegiatan as $kategori)
+                                    <option value="{{ $kategori }}">{{ $kategori }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div>
                             <select id="sortBy" class="w-full px-2 py-1.5 border rounded-lg text-xs" style="border-color: #BFBFBF">
@@ -226,7 +230,7 @@
         const filterTingkat = document.getElementById('filterTingkat');
         const filterIndikator = document.getElementById('filterIndikator');
         const filterKegiatan = document.getElementById('filterKegiatan');
-        const filterInstansi = document.getElementById('filterInstansi');
+        const filterKategori = document.getElementById('filterKategori');
         const sortBy = document.getElementById('sortBy');
         const resetFilterBtn = document.getElementById('resetFilter');
         const expandAllBtn = document.getElementById('expandAll');
@@ -307,11 +311,18 @@
 
                     <!-- Footer: Like / Dislike -->
                     <div class="flex items-center justify-between pt-2 border-t text-xs" style="border-color: #BFBFBF">
-                        <div class="flex gap-3 items-center">
-                            <button class="px-2 py-1 rounded border like-btn" data-id="${usulan.id}" data-type="like" style="border-color:#C7EDEB; color:#005050" onclick="event.stopPropagation(); handleReaction(this)">👍 <span class="like-count">${usulan.likes_count}</span></button>
-                            <button class="px-2 py-1 rounded border dislike-btn" data-id="${usulan.id}" data-type="dislike" style="border-color:#F4F7C2; color:#646400" onclick="event.stopPropagation(); handleReaction(this)">👎 <span class="dislike-count">${usulan.dislikes_count}</span></button>
+                        <span class="inline-block px-2 py-0.5 text-[11px] font-semibold rounded-full" style="background-color:#FAFAFA; color:#007E78">
+                                ${usulan.kategori_kegiatan || '-'}
+                        </span>
+                        
+                        <div class="flex items-center gap-2">
+                            <div class="text-right text-[10px]" style="color:#7F7F7F">${usulan.created_at}</div>
+                            <div class="flex gap-3 items-center">
+                                <button class="px-2 py-1 rounded border like-btn" data-id="${usulan.id}" data-type="like" style="border-color:#C7EDEB; color:#005050" onclick="event.stopPropagation(); handleReaction(this)">👍 <span class="like-count">${usulan.likes_count}</span></button>
+                                <button class="px-2 py-1 rounded border dislike-btn" data-id="${usulan.id}" data-type="dislike" style="border-color:#F4F7C2; color:#646400" onclick="event.stopPropagation(); handleReaction(this)">👎 <span class="dislike-count">${usulan.dislikes_count}</span></button>
+                            </div>
+                            
                         </div>
-                        <div class="text-right text-[10px]" style="color:#7F7F7F">${usulan.created_at}</div>
                     </div>
                 </div>
             `;
@@ -424,7 +435,7 @@
             const tingkat = filterTingkat.value;
             const indikator = filterIndikator.value;
             const kegiatan = filterKegiatan.value.toLowerCase().trim();
-            const instansi = filterInstansi.value.toLowerCase().trim();
+            const kategori = filterKategori.value;
             const sortValue = sortBy.value;
 
             // Filter
@@ -434,8 +445,8 @@
                 const matchKegiatan = !kegiatan ||
                     (u.nama_kegiatan.toLowerCase().includes(kegiatan) ||
                         u.detail_kegiatan.toLowerCase().includes(kegiatan));
-                const matchInstansi = !instansi || u.responden.instansi.toLowerCase().includes(instansi);
-                return matchTingkat && matchIndikator && matchKegiatan && matchInstansi;
+                const matchKategori = !kategori || u.kategori_kegiatan === kategori;
+                return matchTingkat && matchIndikator && matchKegiatan && matchKategori;
             });
 
             // Sort
@@ -478,7 +489,7 @@
             filterTingkat.value = '';
             filterIndikator.value = '';
             filterKegiatan.value = '';
-            filterInstansi.value = '';
+            filterKategori.value = '';
             sortBy.value = 'terbaru';
             applyFilters();
         }
@@ -487,7 +498,7 @@
         filterTingkat.addEventListener('change', applyFilters);
         filterIndikator.addEventListener('change', applyFilters);
         filterKegiatan.addEventListener('input', applyFilters);
-        filterInstansi.addEventListener('input', applyFilters);
+        filterKategori.addEventListener('change', applyFilters);
         sortBy.addEventListener('change', applyFilters);
         resetFilterBtn.addEventListener('click', resetFilters);
         expandAllBtn.addEventListener('click', expandAllCards);
