@@ -100,6 +100,12 @@
         .btn-secondary:hover {
             background: #646400;
         }
+
+        .wrap-text {
+            white-space: normal !important;
+            overflow: visible !important;
+            text-overflow: unset !important;
+        }
     </style>
 </head>
 
@@ -266,8 +272,8 @@
 
                     <!-- Rincian Menu -->
                     <div class="mb-2 py-2 px-1 rounded" style="background-color: #f8f9fa">
-                        <p class="text-xs font-medium truncate" style="color: #007E78" title="${usulan.nama_kegiatan}">
-                            ${usulan.nama_kegiatan.substring(0, 80)}
+                        <p class="text-xs font-medium truncate wrap-text-target" style="color: #007E78" title="${usulan.nama_kegiatan}">
+                            ${usulan.nama_kegiatan}
                         </p>
                     </div>
 
@@ -289,8 +295,8 @@
                     <div class="p-1 rounded mb-2" style="background-color: #f9fafa">
                         <div class="flex items-center justify-between gap-2">
                             <div class="flex-1 min-w-0">
-                                <p class="text-xs font-medium truncate" style="color: #007E78" title="${usulan.indikator.nama}">
-                                    ${usulan.indikator.nomor} · ${usulan.indikator.nama.substring(0, 40)}
+                                <p class="text-xs font-medium truncate wrap-text-target" style="color: #007E78" title="${usulan.indikator.nama}">
+                                    ${usulan.indikator.nomor} · ${usulan.indikator.nama}
                                 </p>
                             </div>
                             <span class="inline-block px-2 py-0.5 text-xs font-semibold rounded-full flex-shrink-0 ${usulan.indikator.tingkat === 'IKP' ? 'badge-ikp' : 'badge-ikk'}">
@@ -315,13 +321,25 @@
         function toggleCard(card) {
             const detailContent = card.querySelector('.detail-content');
             const isExpanded = card.classList.contains('expanded');
+            // Find all elements to wrap/unwrap
+            const wrapTargets = card.querySelectorAll('.wrap-text-target');
 
             if (isExpanded) {
                 card.classList.remove('expanded');
                 detailContent.classList.remove('show');
+                // Remove wrap-text, add truncate
+                wrapTargets.forEach(el => {
+                    el.classList.remove('wrap-text');
+                    el.classList.add('truncate');
+                });
             } else {
                 card.classList.add('expanded');
                 detailContent.classList.add('show');
+                // Remove truncate, add wrap-text
+                wrapTargets.forEach(el => {
+                    el.classList.remove('truncate');
+                    el.classList.add('wrap-text');
+                });
             }
         }
 
@@ -331,12 +349,21 @@
             document.querySelectorAll('.usulan-card').forEach(card => {
                 if (card.style.display !== 'none') {
                     const detailContent = card.querySelector('.detail-content');
+                    const wrapTargets = card.querySelectorAll('.wrap-text-target');
                     if (allExpanded) {
                         card.classList.add('expanded');
                         detailContent.classList.add('show');
+                        wrapTargets.forEach(el => {
+                            el.classList.remove('truncate');
+                            el.classList.add('wrap-text');
+                        });
                     } else {
                         card.classList.remove('expanded');
                         detailContent.classList.remove('show');
+                        wrapTargets.forEach(el => {
+                            el.classList.remove('wrap-text');
+                            el.classList.add('truncate');
+                        });
                     }
                 }
             });

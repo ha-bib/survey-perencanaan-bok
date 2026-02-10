@@ -1,3 +1,12 @@
+sudo -u www php artisan cache:clear
+sudo -u www php artisan view:clear
+sudo -u www php artisan config:clear
+sudo -u www php artisan route:clear
+sudo -u www php artisan config:cache
+sudo -u www php artisan route:cache
+sudo -u www php artisan view:cache
+
+
 @echo off
 REM Laravel Production Optimization Script
 REM Run this after deploying to production
