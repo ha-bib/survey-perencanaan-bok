@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return redirect()->route('usulan.rekap');
-});
+})->name('usulan.index');
 // Route::get('/', [UsulanController::class, 'index'])->name('usulan.index');
 Route::get('/indikator', [UsulanController::class, 'indikator'])->name('usulan.indikator');
 // Route::post('/user', [UsulanController::class, 'storeUser'])->name('usulan.storeUser');
