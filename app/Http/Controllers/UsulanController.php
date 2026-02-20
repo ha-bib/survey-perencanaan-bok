@@ -62,7 +62,7 @@ class UsulanController extends Controller
         ]);
 
         if ($validator->fails()) {
-            dd("error cok! faillll", $validator->errors());
+            dd("error! faillll", $validator->errors());
             return back()->withErrors($validator)->withInput();
         }
         $validated = (object) $validator->validated();
